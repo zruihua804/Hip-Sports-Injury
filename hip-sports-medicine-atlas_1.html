@@ -1,0 +1,5638 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>髋关节运动损伤诊疗系统 · Hip Sports Medicine Atlas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=JetBrains+Mono:wght@400;500;600&family=Noto+Serif+SC:wght@400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ============================================
+   DESIGN TOKENS — Clinical Atlas Aesthetic
+   ============================================ */
+:root {
+  /* Surgical palette — deep anatomical ink, surgical blue, warning amber */
+  --ink: #0F1419;
+  --ink-deep: #080B0E;
+  --paper: #F4EFE6;
+  --paper-warm: #EDE4D3;
+  --parchment: #E8DCC4;
+
+  --surgical: #1B4D6B;
+  --surgical-bright: #2E7BA6;
+  --surgical-pale: #8BB5D1;
+
+  --oxblood: #6B2C2C;
+  --amber: #C8873E;
+  --amber-bright: #E5A855;
+  --sage: #5A6B4A;
+  --bone: #D4C9A8;
+
+  --rule-in: #4A6B3D;
+  --rule-out: #8B3A3A;
+  --caution: #B87333;
+
+  --line: rgba(15, 20, 25, 0.15);
+  --line-strong: rgba(15, 20, 25, 0.35);
+
+  --serif-display: 'Cormorant Garamond', 'Noto Serif SC', serif;
+  --serif-body: 'Noto Serif SC', 'Cormorant Garamond', Georgia, serif;
+  --sans: 'Noto Sans SC', -apple-system, sans-serif;
+  --mono: 'JetBrains Mono', 'Courier New', monospace;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--serif-body);
+  background: var(--paper);
+  color: var(--ink);
+  line-height: 1.7;
+  font-weight: 400;
+  overflow-x: hidden;
+  background-image:
+    radial-gradient(circle at 20% 30%, rgba(200, 135, 62, 0.04) 0%, transparent 40%),
+    radial-gradient(circle at 80% 70%, rgba(27, 77, 107, 0.05) 0%, transparent 40%);
+}
+
+/* Subtle paper grain overlay */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  background-image:
+    repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(15,20,25,0.008) 2px, rgba(15,20,25,0.008) 3px);
+  mix-blend-mode: multiply;
+}
+
+/* ============================================
+   MASTHEAD
+   ============================================ */
+.masthead {
+  border-bottom: 3px double var(--ink);
+  padding: 2rem 3rem 1.5rem;
+  background: var(--paper-warm);
+  position: relative;
+  z-index: 10;
+}
+
+.masthead-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--surgical);
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.masthead-top span { opacity: 0.8; }
+
+.masthead h1 {
+  font-family: var(--serif-display);
+  font-weight: 500;
+  font-size: clamp(2.2rem, 4vw, 3.8rem);
+  line-height: 1;
+  letter-spacing: -0.015em;
+  color: var(--ink-deep);
+}
+
+.masthead h1 .amp {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--oxblood);
+  margin: 0 0.3em;
+}
+
+.masthead-sub {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-top: 0.75rem;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.masthead-subtitle {
+  font-family: var(--serif-body);
+  font-style: italic;
+  font-size: 1.05rem;
+  color: var(--ink);
+  opacity: 0.75;
+  max-width: 600px;
+}
+
+.masthead-meta {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-align: right;
+  line-height: 1.5;
+  color: var(--surgical);
+}
+
+/* ============================================
+   NAVIGATION — Anatomical Tabs
+   ============================================ */
+.nav-bar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--ink);
+  color: var(--paper);
+  border-bottom: 1px solid var(--amber);
+}
+
+.nav-inner {
+  display: flex;
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.nav-tab {
+  flex: 0 0 auto;
+  padding: 0.9rem 1.5rem;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  background: none;
+  border: none;
+  color: rgba(244, 239, 230, 0.55);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-right: 1px solid rgba(244, 239, 230, 0.08);
+  position: relative;
+  white-space: nowrap;
+}
+
+.nav-tab:hover { color: var(--paper); background: rgba(244, 239, 230, 0.04); }
+
+.nav-tab.active {
+  color: var(--amber-bright);
+  background: var(--ink-deep);
+}
+
+.nav-tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--amber-bright);
+}
+
+.nav-tab .num {
+  font-weight: 600;
+  margin-right: 0.5em;
+  opacity: 0.6;
+}
+
+/* ============================================
+   MAIN LAYOUT
+   ============================================ */
+main { padding: 3rem; max-width: 1600px; margin: 0 auto; position: relative; z-index: 5; }
+
+.view { display: none; animation: fadeIn 0.5s ease; }
+.view.active { display: block; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ============================================
+   TYPOGRAPHY
+   ============================================ */
+.section-label {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--surgical);
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.section-label::before {
+  content: '§';
+  font-family: var(--serif-display);
+  font-style: italic;
+  font-size: 1.1rem;
+  color: var(--oxblood);
+}
+
+h2.display {
+  font-family: var(--serif-display);
+  font-weight: 500;
+  font-size: clamp(2rem, 3.5vw, 3rem);
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  margin-bottom: 1rem;
+  color: var(--ink-deep);
+}
+
+h2.display em {
+  font-weight: 400;
+  color: var(--oxblood);
+}
+
+.lede {
+  font-family: var(--serif-body);
+  font-size: 1.1rem;
+  max-width: 720px;
+  margin-bottom: 3rem;
+  color: var(--ink);
+  opacity: 0.85;
+  padding-left: 1.5rem;
+  border-left: 2px solid var(--amber);
+}
+
+/* ============================================
+   VIEW 1: DISEASE SPECTRUM — Anatomical Atlas
+   ============================================ */
+.atlas-layout {
+  display: grid;
+  grid-template-columns: 380px 1fr;
+  gap: 3rem;
+  margin-top: 2rem;
+}
+
+@media (max-width: 1024px) {
+  .atlas-layout { grid-template-columns: 1fr; }
+}
+
+.anatomy-panel {
+  position: sticky;
+  top: 80px;
+  align-self: start;
+  background: var(--paper-warm);
+  border: 1px solid var(--line);
+  padding: 1.5rem;
+  box-shadow: 0 1px 0 var(--ink), 2px 3px 0 rgba(15,20,25,0.08);
+}
+
+.anatomy-panel h3 {
+  font-family: var(--serif-display);
+  font-weight: 600;
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.anatomy-panel h3 .lat {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  color: var(--oxblood);
+  font-weight: 400;
+}
+
+.anatomy-svg {
+  width: 100%;
+  height: auto;
+  margin: 1rem 0;
+  cursor: pointer;
+}
+
+.region-zone {
+  fill: rgba(200, 135, 62, 0.08);
+  stroke: var(--amber);
+  stroke-width: 1.2;
+  stroke-dasharray: 3 2;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.region-zone:hover {
+  fill: rgba(200, 135, 62, 0.25);
+  stroke-width: 1.8;
+}
+
+.region-zone.active {
+  fill: rgba(107, 44, 44, 0.35);
+  stroke: var(--oxblood);
+  stroke-width: 2;
+  stroke-dasharray: none;
+}
+
+.region-label {
+  font-family: var(--mono);
+  font-size: 9px;
+  fill: var(--ink-deep);
+  letter-spacing: 0.05em;
+  pointer-events: none;
+}
+
+.anatomy-legend {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  color: var(--ink);
+  opacity: 0.7;
+  line-height: 1.8;
+  border-top: 1px solid var(--line);
+  padding-top: 1rem;
+  margin-top: 0.5rem;
+}
+
+.legend-row {
+  display: flex;
+  justify-content: space-between;
+  text-transform: uppercase;
+}
+
+.legend-row b { color: var(--oxblood); font-weight: 600; }
+
+/* Spectrum tree */
+.spectrum-tree { padding-left: 0; }
+
+.spectrum-group {
+  margin-bottom: 2rem;
+  border-top: 2px solid var(--ink);
+  padding-top: 1rem;
+  position: relative;
+}
+
+.spectrum-group.filter-hidden { display: none; }
+
+.spectrum-group-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+}
+
+.spectrum-group-title {
+  font-family: var(--serif-display);
+  font-weight: 600;
+  font-size: 1.5rem;
+  letter-spacing: -0.005em;
+  color: var(--ink-deep);
+}
+
+.spectrum-group-title em {
+  font-weight: 400;
+  font-style: italic;
+  color: var(--surgical);
+  font-size: 0.85em;
+  margin-left: 0.5em;
+}
+
+.spectrum-group-tag {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--oxblood);
+  background: var(--parchment);
+  padding: 0.25rem 0.6rem;
+  border: 1px solid var(--line);
+}
+
+.disease-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 0;
+  border-top: 1px solid var(--line);
+  border-left: 1px solid var(--line);
+}
+
+.disease-card {
+  padding: 1.2rem 1.4rem;
+  background: var(--paper);
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  cursor: pointer;
+  transition: all 0.25s ease;
+  position: relative;
+}
+
+.disease-card:hover {
+  background: var(--paper-warm);
+  box-shadow: inset 3px 0 0 var(--amber);
+}
+
+.disease-card-num {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  color: var(--oxblood);
+  letter-spacing: 0.15em;
+  margin-bottom: 0.3rem;
+}
+
+.disease-card-title {
+  font-family: var(--serif-display);
+  font-weight: 600;
+  font-size: 1.1rem;
+  line-height: 1.2;
+  margin-bottom: 0.3rem;
+  color: var(--ink-deep);
+}
+
+.disease-card-en {
+  font-family: var(--serif-display);
+  font-style: italic;
+  font-size: 0.85rem;
+  color: var(--surgical);
+  line-height: 1.3;
+  margin-bottom: 0.6rem;
+}
+
+.disease-card-hint {
+  font-family: var(--sans);
+  font-size: 0.78rem;
+  color: var(--ink);
+  opacity: 0.7;
+  line-height: 1.5;
+}
+
+.disease-card-tags {
+  margin-top: 0.6rem;
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.tag {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.15rem 0.5rem;
+  border: 1px solid var(--line-strong);
+  color: var(--ink);
+  opacity: 0.75;
+}
+
+.tag.prevalence-high { background: var(--oxblood); color: var(--paper); border-color: var(--oxblood); opacity: 1; }
+.tag.prevalence-mid { background: var(--amber); color: var(--ink-deep); border-color: var(--amber); opacity: 1; }
+.tag.surgical { background: var(--surgical); color: var(--paper); border-color: var(--surgical); opacity: 1; }
+
+/* Filter bar */
+.filter-bar {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+  padding: 0.8rem;
+  background: var(--parchment);
+  border: 1px solid var(--line);
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.filter-bar-label {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--oxblood);
+  margin-right: 0.5rem;
+}
+
+.filter-chip {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.35rem 0.8rem;
+  border: 1px solid var(--ink);
+  background: var(--paper);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.filter-chip:hover { background: var(--ink); color: var(--paper); }
+.filter-chip.active { background: var(--ink); color: var(--amber-bright); }
+
+/* ============================================
+   MODAL — Disease Detail Card
+   ============================================ */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(8, 11, 14, 0.75);
+  backdrop-filter: blur(4px);
+  display: none;
+  align-items: flex-start;
+  justify-content: center;
+  z-index: 1000;
+  overflow-y: auto;
+  padding: 2rem;
+}
+
+.modal-overlay.open { display: flex; }
+
+.modal {
+  background: var(--paper);
+  max-width: 1100px;
+  width: 100%;
+  margin: auto;
+  border: 1px solid var(--ink);
+  box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+  animation: modalIn 0.3s ease;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+}
+
+@keyframes modalIn {
+  from { opacity: 0; transform: translateY(20px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.modal-header {
+  padding: 2rem 2.5rem 1.5rem;
+  border-bottom: 3px double var(--ink);
+  background: var(--paper-warm);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 2rem;
+}
+
+.modal-title-block { flex: 1; }
+
+.modal-eyebrow {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--oxblood);
+  margin-bottom: 0.4rem;
+}
+
+.modal-title {
+  font-family: var(--serif-display);
+  font-weight: 600;
+  font-size: 2.2rem;
+  line-height: 1.05;
+  color: var(--ink-deep);
+  margin-bottom: 0.3rem;
+}
+
+.modal-title-en {
+  font-family: var(--serif-display);
+  font-style: italic;
+  font-size: 1.1rem;
+  color: var(--surgical);
+  font-weight: 400;
+}
+
+.modal-close {
+  font-family: var(--serif-display);
+  font-size: 1.8rem;
+  background: none;
+  border: 1px solid var(--ink);
+  width: 44px;
+  height: 44px;
+  cursor: pointer;
+  color: var(--ink);
+  transition: all 0.2s ease;
+  line-height: 1;
+}
+
+.modal-close:hover { background: var(--ink); color: var(--paper); }
+
+.modal-body {
+  padding: 2rem 2.5rem 2.5rem;
+  overflow-y: auto;
+  flex: 1;
+}
+
+/* Clinical section blocks */
+.clinical-section {
+  margin-bottom: 2.5rem;
+  position: relative;
+}
+
+.clinical-section-header {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.clinical-section-num {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--oxblood);
+  letter-spacing: 0.15em;
+}
+
+.clinical-section-title {
+  font-family: var(--serif-display);
+  font-weight: 600;
+  font-size: 1.35rem;
+  color: var(--ink-deep);
+}
+
+.clinical-section-title em {
+  font-weight: 400;
+  font-style: italic;
+  color: var(--surgical);
+  font-size: 0.85em;
+  margin-left: 0.5em;
+}
+
+.clinical-content {
+  font-size: 0.95rem;
+  line-height: 1.75;
+}
+
+.clinical-content p { margin-bottom: 0.8rem; }
+
+.clinical-content ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.clinical-content ul li {
+  padding: 0.4rem 0 0.4rem 1.5rem;
+  border-bottom: 1px dotted var(--line);
+  position: relative;
+}
+
+.clinical-content ul li::before {
+  content: '—';
+  position: absolute;
+  left: 0;
+  color: var(--amber);
+  font-weight: 600;
+}
+
+.clinical-content strong {
+  font-weight: 600;
+  color: var(--ink-deep);
+  font-family: var(--serif-body);
+}
+
+.clinical-content .en {
+  font-style: italic;
+  color: var(--surgical);
+  font-family: var(--serif-display);
+}
+
+/* Rule in / Rule out blocks */
+.decision-pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  border: 1px solid var(--ink);
+  margin: 1rem 0;
+}
+
+@media (max-width: 700px) {
+  .decision-pair { grid-template-columns: 1fr; }
+}
+
+.decision-block { padding: 1.2rem 1.4rem; }
+
+.decision-block.rule-in {
+  background: rgba(74, 107, 61, 0.08);
+  border-right: 1px solid var(--ink);
+}
+
+.decision-block.rule-out {
+  background: rgba(139, 58, 58, 0.08);
+}
+
+.decision-label {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 0.6rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.decision-block.rule-in .decision-label { color: var(--rule-in); }
+.decision-block.rule-out .decision-label { color: var(--rule-out); }
+
+.decision-label::before {
+  display: inline-block;
+  width: 1.2em;
+  height: 1.2em;
+  line-height: 1.2;
+  text-align: center;
+  border: 1.5px solid currentColor;
+  border-radius: 50%;
+  font-size: 0.9em;
+}
+
+.decision-block.rule-in .decision-label::before { content: '✓'; }
+.decision-block.rule-out .decision-label::before { content: '✗'; }
+
+.decision-block ul { padding-left: 0; list-style: none; }
+.decision-block ul li {
+  padding: 0.3rem 0 0.3rem 1.2rem;
+  font-size: 0.88rem;
+  position: relative;
+  border: none;
+}
+.decision-block ul li::before {
+  content: '▸';
+  position: absolute;
+  left: 0;
+  color: currentColor;
+  opacity: 0.5;
+}
+.decision-block.rule-in ul li::before { color: var(--rule-in); }
+.decision-block.rule-out ul li::before { color: var(--rule-out); }
+
+/* Test specificity/sensitivity inline stat */
+.test-stat {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  color: var(--surgical);
+  background: var(--paper-warm);
+  padding: 0.1rem 0.4rem;
+  margin-left: 0.5em;
+  letter-spacing: 0.05em;
+  border: 1px solid var(--line);
+}
+
+/* Treatment ladder */
+.treatment-ladder {
+  margin: 1rem 0;
+  position: relative;
+}
+
+.ladder-rung {
+  display: grid;
+  grid-template-columns: 60px 1fr 2fr;
+  gap: 1.5rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--line);
+  align-items: start;
+}
+
+.ladder-rung:last-child { border-bottom: none; }
+
+.ladder-num {
+  font-family: var(--serif-display);
+  font-weight: 600;
+  font-size: 2.5rem;
+  font-style: italic;
+  color: var(--amber);
+  line-height: 0.9;
+  text-align: right;
+  border-right: 2px solid var(--amber);
+  padding-right: 1rem;
+}
+
+.ladder-stage {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--oxblood);
+  margin-bottom: 0.3rem;
+}
+
+.ladder-title {
+  font-family: var(--serif-display);
+  font-weight: 600;
+  font-size: 1.15rem;
+  color: var(--ink-deep);
+  margin-bottom: 0.2rem;
+}
+
+.ladder-trigger {
+  font-size: 0.85rem;
+  font-style: italic;
+  color: var(--ink);
+  opacity: 0.75;
+}
+
+.ladder-detail {
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.ladder-detail ul { padding-left: 1rem; }
+.ladder-detail ul li { padding: 0.2rem 0; }
+
+/* Evidence tier */
+.evidence-tier {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  padding: 0.1rem 0.4rem;
+  margin-left: 0.5em;
+  border-radius: 2px;
+  vertical-align: middle;
+}
+
+.evidence-tier.a { background: var(--rule-in); color: var(--paper); }
+.evidence-tier.b { background: var(--surgical); color: var(--paper); }
+.evidence-tier.c { background: var(--amber); color: var(--ink-deep); }
+.evidence-tier.d { background: var(--bone); color: var(--ink-deep); }
+
+/* Pathology flow */
+.pathology-flow {
+  background: var(--paper-warm);
+  border: 1px solid var(--line);
+  padding: 1.5rem;
+  margin: 1rem 0;
+  font-family: var(--serif-body);
+  position: relative;
+}
+
+.pathology-flow::before {
+  content: 'PATHOGENESIS';
+  position: absolute;
+  top: -0.6rem;
+  left: 1rem;
+  background: var(--paper);
+  padding: 0 0.6rem;
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  color: var(--oxblood);
+}
+
+.flow-chain {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  font-size: 0.9rem;
+}
+
+.flow-node {
+  padding: 0.4rem 0.8rem;
+  background: var(--paper);
+  border: 1px solid var(--line-strong);
+  font-family: var(--serif-body);
+}
+
+.flow-arrow {
+  color: var(--amber);
+  font-family: var(--mono);
+  font-size: 1rem;
+}
+
+/* Natural history */
+.history-chart {
+  margin: 1rem 0;
+  padding: 1.5rem;
+  background: var(--ink-deep);
+  color: var(--paper);
+  position: relative;
+  overflow: hidden;
+}
+
+.history-chart::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(90deg, transparent 0%, transparent calc(100% - 1px), rgba(200,135,62,0.08) 100%);
+  background-size: 10% 100%;
+  pointer-events: none;
+}
+
+.history-title {
+  font-family: var(--serif-display);
+  font-weight: 500;
+  font-style: italic;
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+  color: var(--bone);
+}
+
+.history-timeline {
+  position: relative;
+  padding: 0.5rem 0 2rem;
+  border-bottom: 1px solid var(--bone);
+}
+
+.history-point {
+  position: absolute;
+  transform: translateX(-50%);
+  text-align: center;
+}
+
+.history-point::before {
+  content: '';
+  display: block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--amber);
+  margin: 0 auto 0.3rem;
+}
+
+.history-point .pt-label {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--bone);
+}
+
+.history-point .pt-time {
+  font-family: var(--serif-display);
+  font-style: italic;
+  font-size: 0.85rem;
+  color: var(--amber-bright);
+  display: block;
+  margin-top: 0.2rem;
+}
+
+.history-note {
+  font-family: var(--serif-body);
+  font-size: 0.85rem;
+  line-height: 1.6;
+  opacity: 0.85;
+  margin-top: 2rem;
+}
+
+/* ============================================
+   VIEW 2: DIAGNOSTIC DECISION TREE
+   ============================================ */
+.decision-tree-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.symptom-picker {
+  background: var(--paper-warm);
+  border: 1px solid var(--ink);
+  padding: 2rem;
+  box-shadow: 2px 3px 0 rgba(15,20,25,0.08);
+}
+
+.picker-header {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.8rem;
+  border-bottom: 2px solid var(--ink);
+}
+
+.picker-title {
+  font-family: var(--serif-display);
+  font-weight: 600;
+  font-size: 1.4rem;
+}
+
+.picker-subtitle {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--oxblood);
+}
+
+.picker-step {
+  margin-bottom: 1.8rem;
+}
+
+.picker-step.disabled { opacity: 0.35; pointer-events: none; }
+
+.step-label {
+  font-family: var(--serif-display);
+  font-weight: 500;
+  font-style: italic;
+  font-size: 1.05rem;
+  margin-bottom: 0.6rem;
+  color: var(--surgical);
+}
+
+.step-label .step-num {
+  font-family: var(--mono);
+  font-style: normal;
+  font-size: 0.75rem;
+  color: var(--oxblood);
+  margin-right: 0.8rem;
+  letter-spacing: 0.15em;
+}
+
+.step-options {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.step-option {
+  padding: 0.6rem 1.1rem;
+  background: var(--paper);
+  border: 1px solid var(--ink);
+  cursor: pointer;
+  font-family: var(--serif-body);
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+
+.step-option:hover { background: var(--ink); color: var(--paper); }
+.step-option.selected {
+  background: var(--surgical);
+  color: var(--paper);
+  border-color: var(--surgical);
+  box-shadow: 2px 2px 0 var(--ink);
+}
+
+.picker-results {
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 3px double var(--ink);
+}
+
+.results-header {
+  font-family: var(--serif-display);
+  font-weight: 600;
+  font-size: 1.3rem;
+  margin-bottom: 0.3rem;
+}
+
+.results-sub {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--oxblood);
+  margin-bottom: 1.2rem;
+}
+
+.results-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 0.8rem;
+}
+
+.result-item {
+  padding: 1rem 1.2rem;
+  background: var(--paper);
+  border: 1px solid var(--line-strong);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.result-item:hover {
+  border-color: var(--ink);
+  box-shadow: 3px 3px 0 rgba(15,20,25,0.1);
+}
+
+.result-prob {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  color: var(--oxblood);
+  position: absolute;
+  top: 0.8rem;
+  right: 0.8rem;
+}
+
+.result-rank {
+  font-family: var(--serif-display);
+  font-weight: 600;
+  font-style: italic;
+  font-size: 2rem;
+  color: var(--amber);
+  line-height: 1;
+  margin-bottom: 0.3rem;
+}
+
+.result-name {
+  font-family: var(--serif-display);
+  font-weight: 600;
+  font-size: 1.05rem;
+  color: var(--ink-deep);
+  margin-bottom: 0.2rem;
+}
+
+.result-why {
+  font-size: 0.8rem;
+  font-style: italic;
+  color: var(--ink);
+  opacity: 0.75;
+}
+
+/* ============================================
+   VIEW 3: PHYSICAL EXAM TESTS
+   ============================================ */
+.test-catalog {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 0;
+  border-top: 2px solid var(--ink);
+  border-left: 1px solid var(--line);
+  margin-top: 2rem;
+}
+
+.test-card {
+  padding: 1.4rem 1.5rem;
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  background: var(--paper);
+  position: relative;
+}
+
+.test-card:hover { background: var(--paper-warm); }
+
+.test-num {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  color: var(--oxblood);
+  margin-bottom: 0.3rem;
+}
+
+.test-title {
+  font-family: var(--serif-display);
+  font-weight: 600;
+  font-size: 1.2rem;
+  line-height: 1.2;
+  margin-bottom: 0.2rem;
+}
+
+.test-cn {
+  font-size: 0.95rem;
+  color: var(--ink);
+  opacity: 0.8;
+  margin-bottom: 0.8rem;
+}
+
+.test-method {
+  font-family: var(--serif-body);
+  font-size: 0.88rem;
+  line-height: 1.6;
+  padding: 0.8rem;
+  background: var(--paper-warm);
+  border-left: 2px solid var(--amber);
+  margin-bottom: 0.8rem;
+}
+
+.test-positive {
+  font-size: 0.85rem;
+  font-style: italic;
+  color: var(--oxblood);
+  margin-bottom: 0.8rem;
+  padding-left: 1rem;
+  border-left: 2px solid var(--oxblood);
+}
+
+.test-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.4rem;
+  margin-bottom: 0.6rem;
+}
+
+.test-stat-box {
+  padding: 0.4rem 0.5rem;
+  background: var(--ink-deep);
+  color: var(--paper);
+  text-align: center;
+}
+
+.test-stat-label {
+  font-family: var(--mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.1em;
+  opacity: 0.7;
+}
+
+.test-stat-val {
+  font-family: var(--serif-display);
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: var(--amber-bright);
+  font-style: italic;
+}
+
+.test-for {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  color: var(--surgical);
+  text-transform: uppercase;
+}
+
+/* ============================================
+   VIEW 4: IMAGING PROTOCOL
+   ============================================ */
+.imaging-flowchart {
+  margin-top: 2rem;
+  padding: 2rem;
+  background: var(--paper-warm);
+  border: 1px solid var(--ink);
+  position: relative;
+}
+
+.imaging-level {
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px dashed var(--line-strong);
+}
+
+.imaging-level:last-child { border-bottom: none; padding-bottom: 0; }
+
+.imaging-level-header {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.imaging-level-num {
+  font-family: var(--serif-display);
+  font-weight: 600;
+  font-style: italic;
+  font-size: 2rem;
+  color: var(--amber);
+  line-height: 1;
+}
+
+.imaging-level-title {
+  font-family: var(--serif-display);
+  font-weight: 600;
+  font-size: 1.4rem;
+}
+
+.imaging-level-role {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--oxblood);
+  margin-left: auto;
+}
+
+.imaging-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+}
+
+.imaging-modality {
+  background: var(--paper);
+  padding: 1.2rem;
+  border: 1px solid var(--line);
+}
+
+.imaging-modality-name {
+  font-family: var(--serif-display);
+  font-weight: 600;
+  font-size: 1.1rem;
+  margin-bottom: 0.2rem;
+}
+
+.imaging-modality-en {
+  font-family: var(--serif-display);
+  font-style: italic;
+  font-size: 0.85rem;
+  color: var(--surgical);
+  margin-bottom: 0.6rem;
+}
+
+.imaging-modality p {
+  font-size: 0.85rem;
+  line-height: 1.55;
+  margin-bottom: 0.5rem;
+}
+
+.imaging-modality p strong { color: var(--oxblood); font-weight: 600; }
+
+.imaging-key {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  color: var(--surgical);
+  padding: 0.3rem 0.6rem;
+  background: var(--paper-warm);
+  border-left: 2px solid var(--surgical);
+  margin-top: 0.5rem;
+  display: block;
+}
+
+/* ============================================
+   FOOTER
+   ============================================ */
+footer {
+  margin-top: 5rem;
+  padding: 2.5rem 3rem;
+  background: var(--ink-deep);
+  color: var(--bone);
+  border-top: 1px solid var(--amber);
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 3rem;
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+  .footer-grid { grid-template-columns: 1fr; gap: 2rem; }
+}
+
+.footer-brand {
+  font-family: var(--serif-display);
+  font-style: italic;
+  font-size: 1.4rem;
+  color: var(--paper);
+  margin-bottom: 0.5rem;
+}
+
+.footer-desc {
+  font-size: 0.85rem;
+  line-height: 1.7;
+  opacity: 0.75;
+}
+
+.footer-meta {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  line-height: 2;
+  opacity: 0.7;
+  text-transform: uppercase;
+}
+
+.footer-meta strong { color: var(--amber-bright); font-weight: 500; }
+
+.footer-disclaimer {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(212, 201, 168, 0.2);
+  font-family: var(--serif-body);
+  font-style: italic;
+  font-size: 0.8rem;
+  opacity: 0.6;
+  text-align: center;
+  max-width: 1600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: var(--paper-warm); }
+::-webkit-scrollbar-thumb { background: var(--surgical); }
+::-webkit-scrollbar-thumb:hover { background: var(--ink); }
+
+/* ============================================
+   ENHANCED UI — Red Flags, Evidence detail,
+   Typical Case, Controversies, Supports/Opposes
+   ============================================ */
+
+/* — § 00 Red Flag section in modal — */
+.redflag-section {
+  border: 1.5px solid var(--rule-out);
+  border-left-width: 5px;
+  background: linear-gradient(90deg, rgba(139, 58, 58, 0.08), transparent 80%);
+  padding: 1rem 1.25rem 1.25rem;
+  margin-bottom: 1.75rem;
+}
+.redflag-header .clinical-section-num,
+.redflag-header .clinical-section-title { color: var(--rule-out); }
+.redflag-header .clinical-section-title em { color: var(--rule-out); opacity: 0.75; }
+
+.redflag-list { display: flex; flex-direction: column; gap: 0.65rem; margin-top: 0.6rem; }
+.redflag-row {
+  display: grid;
+  grid-template-columns: 28px 1fr;
+  gap: 0.75rem;
+  padding: 0.6rem 0.85rem;
+  background: rgba(139, 58, 58, 0.06);
+  border-left: 2px solid var(--rule-out);
+}
+.redflag-icon {
+  font-size: 1.2rem;
+  color: var(--rule-out);
+  font-weight: 700;
+  line-height: 1.2;
+}
+.redflag-flag {
+  font-family: var(--serif-body);
+  font-weight: 600;
+  color: var(--ink);
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+.redflag-action {
+  font-size: 0.85rem;
+  color: var(--ink-deep);
+  opacity: 0.85;
+  margin-top: 0.35rem;
+  line-height: 1.5;
+}
+.redflag-arrow { color: var(--rule-out); margin-right: 0.35rem; }
+
+/* — Red Flag banner in differential results — */
+.redflag-banner {
+  border: 1.5px solid var(--rule-out);
+  background: linear-gradient(180deg, rgba(139, 58, 58, 0.1), rgba(139, 58, 58, 0.03));
+  padding: 1rem 1.1rem;
+  margin-bottom: 1.25rem;
+}
+.redflag-banner-title {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--rule-out);
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px dashed var(--rule-out);
+}
+.redflag-banner-row {
+  display: grid;
+  grid-template-columns: 4px 1fr;
+  gap: 0.75rem;
+  padding: 0.55rem 0.25rem;
+  border-bottom: 1px solid rgba(139, 58, 58, 0.15);
+}
+.redflag-banner-row:last-child { border-bottom: none; }
+.rf-bar { background: var(--rule-out); width: 4px; border-radius: 2px; }
+.redflag-banner-row.level-medium .rf-bar { background: var(--amber); }
+.redflag-banner-row.level-low .rf-bar { background: var(--surgical); }
+.rf-title {
+  font-family: var(--serif-body);
+  font-weight: 700;
+  color: var(--rule-out);
+  font-size: 0.95rem;
+}
+.redflag-banner-row.level-medium .rf-title { color: var(--caution); }
+.redflag-banner-row.level-low .rf-title { color: var(--surgical); }
+.rf-detail {
+  font-size: 0.85rem;
+  color: var(--ink);
+  margin-top: 0.25rem;
+  line-height: 1.55;
+}
+.rf-action {
+  font-size: 0.82rem;
+  color: var(--ink-deep);
+  margin-top: 0.3rem;
+  font-style: italic;
+  opacity: 0.85;
+}
+.rf-arrow { margin-right: 0.3rem; color: var(--rule-out); }
+
+/* — Evidence tier + expandable detail block — */
+.evidence-tier.has-detail {
+  cursor: pointer;
+  user-select: none;
+  transition: filter 0.15s;
+}
+.evidence-tier.has-detail:hover { filter: brightness(1.15); }
+.evidence-tier.has-detail.active { box-shadow: 0 0 0 2px var(--amber-bright); }
+
+.evidence-detail-block {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.35s ease;
+  margin-top: 0.75rem;
+  border-left: 2px solid var(--amber);
+  padding-left: 0;
+}
+.evidence-detail-block.open {
+  max-height: 3000px;
+  padding: 0.85rem 0 0.5rem 1rem;
+  margin-top: 0.8rem;
+}
+.evidence-detail-label {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--amber);
+  letter-spacing: 0.1em;
+  margin-bottom: 0.55rem;
+  text-transform: uppercase;
+}
+.trial-card {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  padding: 0.8rem 0.9rem;
+  margin-bottom: 0.6rem;
+  font-size: 0.85rem;
+  line-height: 1.55;
+}
+.trial-name {
+  font-family: var(--serif-display);
+  font-weight: 600;
+  color: var(--oxblood);
+  font-size: 1rem;
+  margin-bottom: 0.45rem;
+  font-style: italic;
+}
+.trial-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+  margin-bottom: 0.45rem;
+}
+.trial-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding: 0.35rem 0.5rem;
+  background: var(--parchment);
+  border-left: 2px solid var(--surgical);
+}
+.trial-k {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--surgical);
+  font-weight: 600;
+}
+.trial-v { font-size: 0.82rem; color: var(--ink); }
+.trial-effect, .trial-exclusion {
+  font-size: 0.82rem;
+  margin-top: 0.35rem;
+  padding: 0.35rem 0.55rem;
+  background: rgba(27, 77, 107, 0.05);
+  border-left: 2px solid var(--surgical-pale);
+}
+.trial-effect .trial-k,
+.trial-exclusion .trial-k { margin-right: 0.4rem; }
+.trial-note {
+  margin-top: 0.4rem;
+  padding-top: 0.35rem;
+  border-top: 1px dashed var(--line);
+  font-style: italic;
+  color: var(--ink-deep);
+  opacity: 0.9;
+  font-size: 0.8rem;
+}
+.evidence-keypoint {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 0.7rem 0.9rem;
+  margin-top: 0.6rem;
+  font-size: 0.85rem;
+  line-height: 1.55;
+  border-left: 3px solid var(--amber);
+}
+.keypoint-label {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  color: var(--amber-bright);
+  text-transform: uppercase;
+  margin-right: 0.5rem;
+  font-weight: 600;
+}
+
+/* — § 09 Typical Case — */
+.case-container {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--surgical);
+  padding: 1rem 1.1rem 1.2rem;
+}
+.case-title {
+  font-family: var(--serif-display);
+  font-weight: 600;
+  font-style: italic;
+  color: var(--oxblood);
+  font-size: 1.15rem;
+  margin-bottom: 0.85rem;
+  padding-bottom: 0.55rem;
+  border-bottom: 1px dashed var(--line);
+  line-height: 1.35;
+}
+.case-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.7rem;
+}
+.case-block {
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  gap: 0.8rem;
+  padding: 0.55rem 0;
+  border-bottom: 1px solid rgba(15, 20, 25, 0.06);
+  align-items: start;
+}
+.case-block:last-child { border-bottom: none; }
+.case-label {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--surgical);
+  padding-top: 0.15rem;
+  font-weight: 600;
+}
+.case-body {
+  font-size: 0.88rem;
+  line-height: 1.62;
+  color: var(--ink);
+}
+.case-reflection {
+  margin-top: 0.95rem;
+  padding: 0.85rem 1rem;
+  background: var(--parchment);
+  border-left: 3px solid var(--amber);
+}
+.case-reflection-title {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--amber);
+  font-weight: 600;
+  margin-bottom: 0.55rem;
+}
+.case-reflection ul { list-style: none; padding: 0; margin: 0; }
+.case-reflection li {
+  padding: 0.4rem 0 0.4rem 1.2rem;
+  position: relative;
+  font-size: 0.87rem;
+  line-height: 1.6;
+  color: var(--ink);
+  border-bottom: 1px dashed rgba(15, 20, 25, 0.1);
+}
+.case-reflection li:last-child { border-bottom: none; }
+.case-reflection li::before {
+  content: '▸';
+  color: var(--amber);
+  position: absolute;
+  left: 0.3rem;
+  top: 0.45rem;
+  font-size: 0.85rem;
+}
+
+/* — § 10 Controversies & Frontiers — */
+.controversy-list { display: flex; flex-direction: column; gap: 0.85rem; }
+.controversy-item {
+  display: grid;
+  grid-template-columns: 56px 1fr;
+  gap: 0.9rem;
+  padding: 0.9rem 1rem;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--sage);
+}
+.controversy-num {
+  font-family: var(--serif-display);
+  font-size: 2.2rem;
+  font-weight: 400;
+  font-style: italic;
+  color: var(--sage);
+  line-height: 1;
+  padding-top: 0.15rem;
+}
+.controversy-topic {
+  font-family: var(--serif-body);
+  font-weight: 600;
+  color: var(--ink);
+  font-size: 0.98rem;
+  margin-bottom: 0.6rem;
+  line-height: 1.4;
+}
+.controversy-row {
+  display: grid;
+  grid-template-columns: 60px 1fr;
+  gap: 0.75rem;
+  padding: 0.45rem 0;
+  align-items: start;
+}
+.controversy-row + .controversy-row { border-top: 1px dashed var(--line); }
+.controversy-tag {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.2rem 0.4rem;
+  text-align: center;
+  height: fit-content;
+  border-radius: 1px;
+}
+.controversy-tag.current { background: var(--ink); color: var(--paper); }
+.controversy-tag.frontier { background: var(--amber); color: var(--ink-deep); }
+.controversy-text {
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: var(--ink);
+}
+
+/* — Differential engine enhanced results — */
+.result-item.enhanced {
+  display: block;
+  cursor: pointer;
+  padding: 1rem 1.1rem;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--surgical);
+  margin-bottom: 0.75rem;
+  transition: transform 0.12s, box-shadow 0.12s;
+}
+.result-item.enhanced:hover {
+  transform: translateX(2px);
+  box-shadow: -3px 3px 0 var(--amber);
+  border-left-color: var(--amber);
+}
+.result-head {
+  display: grid;
+  grid-template-columns: 36px 1fr auto;
+  gap: 0.9rem;
+  align-items: center;
+  margin-bottom: 0.6rem;
+}
+.result-item.enhanced .result-rank {
+  font-family: var(--serif-display);
+  font-size: 1.6rem;
+  font-weight: 600;
+  font-style: italic;
+  color: var(--oxblood);
+  line-height: 1;
+}
+.result-titles { min-width: 0; }
+.result-item.enhanced .result-name {
+  font-family: var(--serif-body);
+  font-weight: 600;
+  color: var(--ink);
+  font-size: 1rem;
+  line-height: 1.3;
+}
+.result-item.enhanced .result-why {
+  font-family: var(--serif-display);
+  font-style: italic;
+  color: var(--oxblood);
+  font-size: 0.82rem;
+  margin-top: 0.1rem;
+  line-height: 1.3;
+}
+.result-tier {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.3rem 0.55rem;
+  white-space: nowrap;
+}
+.result-tier.t-high    { background: var(--rule-in); color: var(--paper); }
+.result-tier.t-strong  { background: var(--surgical); color: var(--paper); }
+.result-tier.t-mid     { background: var(--amber); color: var(--ink-deep); }
+.result-tier.t-low     { background: var(--parchment); color: var(--ink); border: 1px solid var(--line); }
+.result-tier.t-neg     { background: var(--rule-out); color: var(--paper); opacity: 0.7; }
+
+.result-bar-wrap { position: relative; margin-bottom: 0.6rem; }
+.result-bar {
+  height: 4px;
+  background: linear-gradient(90deg, var(--surgical), var(--amber));
+  min-width: 3%;
+  transition: width 0.3s;
+}
+.result-bar-meta {
+  display: flex;
+  gap: 0.85rem;
+  margin-top: 0.3rem;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+}
+.rb-sup { color: var(--rule-in); font-weight: 600; }
+.rb-opp { color: var(--rule-out); font-weight: 600; }
+.rb-net { color: var(--ink); font-weight: 700; }
+
+.result-evidence-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  margin-top: 0.4rem;
+}
+.result-evidence {
+  padding: 0.6rem 0.75rem;
+  background: var(--paper-warm);
+  border-top: 2px solid transparent;
+  font-size: 0.82rem;
+}
+.result-evidence.supports { border-top-color: var(--rule-in); }
+.result-evidence.opposes { border-top-color: var(--rule-out); }
+.result-evidence-label {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 0.4rem;
+  font-weight: 600;
+}
+.result-evidence.supports .result-evidence-label { color: var(--rule-in); }
+.result-evidence.opposes .result-evidence-label  { color: var(--rule-out); }
+.result-evidence ul { list-style: none; padding: 0; margin: 0; }
+.result-evidence li {
+  display: grid;
+  grid-template-columns: 32px 1fr;
+  gap: 0.4rem;
+  padding: 0.3rem 0;
+  font-size: 0.78rem;
+  line-height: 1.5;
+  color: var(--ink);
+  border-bottom: 1px dashed rgba(15, 20, 25, 0.08);
+}
+.result-evidence li:last-child { border-bottom: none; }
+.result-evidence li.ev-empty { color: var(--line-strong); font-style: italic; grid-template-columns: 1fr; }
+.w-chip {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-align: center;
+  padding: 0.1rem 0.2rem;
+  height: fit-content;
+  border-radius: 1px;
+}
+.w-chip.pos { background: var(--rule-in); color: var(--paper); }
+.w-chip.neg { background: var(--rule-out); color: var(--paper); }
+
+.result-cta {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--amber);
+  margin-top: 0.65rem;
+  letter-spacing: 0.04em;
+  opacity: 0.75;
+}
+
+/* — Test popover (linkified test names in modal) — */
+.test-link {
+  color: var(--surgical-bright);
+  border-bottom: 1px dotted var(--surgical-bright);
+  text-decoration: none;
+  cursor: pointer;
+  font-weight: 500;
+}
+.test-link:hover { color: var(--amber); border-bottom-color: var(--amber); }
+
+.test-popover {
+  position: fixed;
+  width: 380px;
+  max-width: calc(100vw - 24px);
+  background: var(--paper);
+  border: 1.5px solid var(--ink);
+  box-shadow: -4px 4px 0 var(--amber);
+  padding: 1rem 1.1rem 1rem 1.2rem;
+  z-index: 10000;
+  font-family: var(--serif-body);
+}
+.test-popover .tp-close {
+  position: absolute;
+  top: 6px; right: 10px;
+  cursor: pointer;
+  font-size: 1.4rem;
+  line-height: 1;
+  color: var(--oxblood);
+  font-weight: 700;
+}
+.test-popover .tp-title {
+  font-family: var(--serif-display);
+  font-weight: 600;
+  color: var(--oxblood);
+  font-size: 1.05rem;
+  margin-bottom: 0.55rem;
+}
+.test-popover .tp-title em {
+  font-style: italic;
+  color: var(--ink);
+  opacity: 0.75;
+  font-size: 0.88rem;
+  margin-left: 0.4rem;
+}
+.test-popover .tp-method,
+.test-popover .tp-positive {
+  font-size: 0.85rem;
+  line-height: 1.55;
+  margin-bottom: 0.45rem;
+  color: var(--ink);
+}
+.test-popover .tp-stats {
+  display: flex;
+  gap: 0.75rem;
+  padding: 0.45rem 0;
+  margin: 0.5rem 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  font-family: var(--mono);
+  font-size: 0.78rem;
+}
+.test-popover .tp-stats b { color: var(--surgical); margin-right: 0.25rem; }
+.test-popover .tp-for {
+  font-size: 0.8rem;
+  color: var(--amber);
+  font-style: italic;
+  margin-top: 0.45rem;
+}
+
+/* Mobile adjustments for new elements */
+@media (max-width: 768px) {
+  .trial-grid { grid-template-columns: 1fr; }
+  .result-evidence-grid { grid-template-columns: 1fr; }
+  .controversy-item { grid-template-columns: 40px 1fr; gap: 0.65rem; padding: 0.75rem 0.85rem; }
+  .controversy-num { font-size: 1.8rem; }
+  .controversy-row { grid-template-columns: 52px 1fr; gap: 0.55rem; }
+  .case-block { grid-template-columns: 1fr; gap: 0.25rem; }
+  .case-label { font-size: 0.68rem; }
+  .test-popover { width: calc(100vw - 24px); left: 12px !important; }
+  .result-head { grid-template-columns: 30px 1fr; }
+  .result-tier { grid-column: 1 / -1; margin-top: 0.35rem; justify-self: start; }
+}
+
+</style>
+</head>
+<body>
+
+<!-- ========== MASTHEAD ========== -->
+<header class="masthead">
+  <div class="masthead-top">
+    <span>Vol. I · No. 01 · Clinical Atlas</span>
+    <span>骨科运动医学 · 进阶诊疗系统</span>
+    <span>Orthopaedic Sports Medicine</span>
+  </div>
+  <h1>Hip <span class="amp">&amp;</span> Pelvis <em style="font-style: italic; font-weight: 400; color: var(--surgical);">Sports Injury</em></h1>
+  <div class="masthead-sub">
+    <div class="masthead-subtitle">
+      An interactive clinical reference for hip and pelvic sports injuries — organized by anatomical layer, driven by diagnostic logic, calibrated to evidence.
+    </div>
+    <div class="masthead-meta">
+      EDITION 2026.I<br>
+      FOR CLINICIAN USE ONLY<br>
+      优复门诊 · 运动医学
+    </div>
+  </div>
+</header>
+
+<!-- ========== NAVIGATION ========== -->
+<nav class="nav-bar">
+  <div class="nav-inner">
+    <button class="nav-tab active" data-view="atlas"><span class="num">I.</span>疾病谱系 Disease Atlas</button>
+    <button class="nav-tab" data-view="decision"><span class="num">II.</span>鉴别推理 Differential Engine</button>
+    <button class="nav-tab" data-view="exam"><span class="num">III.</span>查体目录 Physical Exam</button>
+    <button class="nav-tab" data-view="imaging"><span class="num">IV.</span>影像路径 Imaging Ladder</button>
+    <button class="nav-tab" data-view="principles"><span class="num">V.</span>诊疗原则 Principles</button>
+  </div>
+</nav>
+
+<main>
+
+<!-- ============================================
+     VIEW 1: DISEASE ATLAS
+     ============================================ -->
+<section class="view active" id="view-atlas">
+  <div class="section-label">Part I · 按解剖层次组织的疾病谱系</div>
+  <h2 class="display">Anatomical <em>Spectrum</em> of Hip Sports Pathology</h2>
+  <p class="lede">
+    髋部运动损伤的谱系庞杂，但诊断思维的起点永远是"层"—— 关节外 vs 关节内、软组织 vs 骨性、结构 vs 神经。点击解剖分区或疾病卡片进入深度阅读。每一种疾病包含症状学、体征、影像路径、rule in / rule out 逻辑、病因病理、自然病史与循证治疗阶梯。
+  </p>
+
+  <div class="filter-bar">
+    <span class="filter-bar-label">Filter by compartment:</span>
+    <button class="filter-chip active" data-filter="all">全部 All</button>
+    <button class="filter-chip" data-filter="intra">关节内 Intra-articular</button>
+    <button class="filter-chip" data-filter="anterior">前侧 Anterior</button>
+    <button class="filter-chip" data-filter="lateral">外侧 Lateral</button>
+    <button class="filter-chip" data-filter="posterior">后侧 Posterior</button>
+    <button class="filter-chip" data-filter="medial">内侧 Medial</button>
+    <button class="filter-chip" data-filter="bony">骨性 Bony</button>
+    <button class="filter-chip" data-filter="neural">神经 Neural</button>
+  </div>
+
+  <div class="atlas-layout">
+
+    <!-- Anatomy Panel -->
+    <aside class="anatomy-panel">
+      <h3>Anterior View <span class="lat">VENTRALIS</span></h3>
+
+      <svg class="anatomy-svg" viewBox="0 0 340 480" xmlns="http://www.w3.org/2000/svg">
+        <!-- Pelvis schematic -->
+        <defs>
+          <pattern id="bone-tex" width="4" height="4" patternUnits="userSpaceOnUse">
+            <rect width="4" height="4" fill="#E8DCC4"/>
+            <circle cx="2" cy="2" r="0.3" fill="#C8873E" opacity="0.3"/>
+          </pattern>
+        </defs>
+
+        <!-- Pelvic outline (schematic) -->
+        <path d="M 60 90 Q 40 140 50 210 L 80 270 Q 90 290 120 295 L 170 280 L 220 295 Q 250 290 260 270 L 290 210 Q 300 140 280 90 Q 260 70 220 75 Q 170 80 170 95 Q 170 80 120 75 Q 80 70 60 90 Z"
+              fill="url(#bone-tex)" stroke="#0F1419" stroke-width="1.5"/>
+
+        <!-- Sacrum -->
+        <path d="M 150 100 L 190 100 L 185 180 L 170 195 L 155 180 Z"
+              fill="#D4C9A8" stroke="#0F1419" stroke-width="1"/>
+
+        <!-- Acetabulum L -->
+        <circle cx="100" cy="245" r="22" fill="none" stroke="#0F1419" stroke-width="1.5"/>
+        <circle cx="100" cy="245" r="16" fill="#6B2C2C" opacity="0.4"/>
+
+        <!-- Acetabulum R -->
+        <circle cx="240" cy="245" r="22" fill="none" stroke="#0F1419" stroke-width="1.5"/>
+        <circle cx="240" cy="245" r="16" fill="#6B2C2C" opacity="0.4"/>
+
+        <!-- Femur head L -->
+        <circle cx="100" cy="245" r="13" fill="#E8DCC4" stroke="#0F1419" stroke-width="1"/>
+        <path d="M 92 255 Q 85 280 78 310 L 68 460 L 88 460 L 98 260 Z"
+              fill="url(#bone-tex)" stroke="#0F1419" stroke-width="1"/>
+
+        <!-- Femur head R -->
+        <circle cx="240" cy="245" r="13" fill="#E8DCC4" stroke="#0F1419" stroke-width="1"/>
+        <path d="M 248 255 Q 255 280 262 310 L 272 460 L 252 460 L 242 260 Z"
+              fill="url(#bone-tex)" stroke="#0F1419" stroke-width="1"/>
+
+        <!-- Greater trochanter L -->
+        <ellipse cx="70" cy="265" rx="12" ry="18" fill="#D4C9A8" stroke="#0F1419" stroke-width="1"/>
+        <!-- Greater trochanter R -->
+        <ellipse cx="270" cy="265" rx="12" ry="18" fill="#D4C9A8" stroke="#0F1419" stroke-width="1"/>
+
+        <!-- Pubic symphysis -->
+        <rect x="165" y="295" width="10" height="20" fill="#6B2C2C" opacity="0.5" stroke="#0F1419" stroke-width="0.8"/>
+
+        <!-- Interactive zones -->
+        <!-- Intra-articular zone (left hip joint) -->
+        <ellipse class="region-zone" data-region="intra" cx="100" cy="245" rx="28" ry="28"/>
+        <text x="100" y="215" class="region-label" text-anchor="middle">INTRA-ARTIC.</text>
+
+        <!-- Anterior zone -->
+        <rect class="region-zone" data-region="anterior" x="145" y="250" width="50" height="55" rx="4"/>
+        <text x="170" y="335" class="region-label" text-anchor="middle">ANTERIOR</text>
+
+        <!-- Lateral zone (right trochanter) -->
+        <ellipse class="region-zone" data-region="lateral" cx="270" cy="270" rx="22" ry="30"/>
+        <text x="270" y="220" class="region-label" text-anchor="middle">LATERAL</text>
+
+        <!-- Medial zone (pubic) -->
+        <rect class="region-zone" data-region="medial" x="155" y="300" width="30" height="30" rx="4"/>
+        <text x="170" y="358" class="region-label" text-anchor="middle">MEDIAL</text>
+
+        <!-- Posterior zone (deep gluteal, show on right side) -->
+        <rect class="region-zone" data-region="posterior" x="200" y="280" width="50" height="40" rx="4"/>
+        <text x="225" y="340" class="region-label" text-anchor="middle">POSTERIOR</text>
+
+        <!-- Bony zone (femoral neck hint) -->
+        <path class="region-zone" data-region="bony" d="M 85 255 L 78 310 L 90 312 L 98 260 Z"/>
+
+        <!-- Callout lines and markers -->
+        <line x1="100" y1="245" x2="30" y2="200" stroke="#6B2C2C" stroke-width="0.8" stroke-dasharray="2 2"/>
+        <text x="28" y="195" class="region-label" text-anchor="end">HIP JOINT</text>
+
+        <line x1="270" y1="265" x2="320" y2="230" stroke="#6B2C2C" stroke-width="0.8" stroke-dasharray="2 2"/>
+        <text x="322" y="225" class="region-label" text-anchor="start">GT</text>
+
+        <line x1="170" y1="305" x2="170" y2="360" stroke="#6B2C2C" stroke-width="0.8" stroke-dasharray="2 2"/>
+      </svg>
+
+      <div class="anatomy-legend">
+        <div class="legend-row"><span>图例 Legend</span><span></span></div>
+        <div class="legend-row"><span>点击分区 → 筛选</span><b>Click to filter</b></div>
+        <div class="legend-row"><span>虚线框</span><span>= Interactive zone</span></div>
+        <div class="legend-row"><span>实心点</span><span>= 临床定位</span></div>
+      </div>
+    </aside>
+
+    <!-- Disease Spectrum Tree -->
+    <div class="spectrum-tree" id="spectrum-tree">
+      <!-- Groups populated by JS -->
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     VIEW 2: DIFFERENTIAL ENGINE
+     ============================================ -->
+<section class="view" id="view-decision">
+  <div class="section-label">Part II · 从主诉到鉴别的推理引擎</div>
+  <h2 class="display">The <em>Differential</em> Engine</h2>
+  <p class="lede">
+    选择患者呈现的核心特征 —— 疼痛部位、机械症状、活动方式、年龄段。系统基于贝叶斯式的解剖定位逻辑给出加权鉴别列表。这不是替代临床判断，而是结构化你的推理过程，让隐性知识外化。
+  </p>
+
+  <div class="decision-tree-layout">
+    <div class="symptom-picker">
+      <div class="picker-header">
+        <span class="picker-title">Patient Presentation</span>
+        <span class="picker-subtitle">Step-wise Localization</span>
+      </div>
+
+      <div class="picker-step" data-step="1">
+        <div class="step-label"><span class="step-num">01</span>主诉疼痛定位 Pain location</div>
+        <div class="step-options" data-key="location">
+          <button class="step-option" data-val="groin">腹股沟 / 前方 Groin</button>
+          <button class="step-option" data-val="lateral">外侧 / 大转子 Lateral / GT</button>
+          <button class="step-option" data-val="deep-gluteal">深臀 / 坐骨 Deep Gluteal</button>
+          <button class="step-option" data-val="medial">内侧 / 内收肌 Medial</button>
+          <button class="step-option" data-val="c-sign">C-sign（C型环握）</button>
+        </div>
+      </div>
+
+      <div class="picker-step" data-step="2">
+        <div class="step-label"><span class="step-num">02</span>机械症状 Mechanical symptoms</div>
+        <div class="step-options" data-key="mechanical">
+          <button class="step-option" data-val="clicking">弹响 / 绞锁 Catching / Locking</button>
+          <button class="step-option" data-val="snapping">弹响无绞锁 Snapping only</button>
+          <button class="step-option" data-val="giving-way">打软 / 不稳 Giving-way</button>
+          <button class="step-option" data-val="none">无机械症状 No mechanical</button>
+        </div>
+      </div>
+
+      <div class="picker-step" data-step="3">
+        <div class="step-label"><span class="step-num">03</span>诱因 / 运动方式 Provocation</div>
+        <div class="step-options" data-key="provocation">
+          <button class="step-option" data-val="deep-flexion">深屈曲 Deep flexion（蹲、坐车）</button>
+          <button class="step-option" data-val="side-lying">侧卧 / 外侧压迫 Side-lying</button>
+          <button class="step-option" data-val="sitting">久坐 Prolonged sitting</button>
+          <button class="step-option" data-val="cutting">变向 / 加速 Cutting, sprinting</button>
+          <button class="step-option" data-val="insidious">隐匿无外伤 Insidious onset</button>
+          <button class="step-option" data-val="acute-trauma">急性外伤 Acute trauma</button>
+        </div>
+      </div>
+
+      <div class="picker-step" data-step="4">
+        <div class="step-label"><span class="step-num">04</span>年龄 / 人群 Demographics</div>
+        <div class="step-options" data-key="demo">
+          <button class="step-option" data-val="young-athlete">年轻运动员 &lt;35y</button>
+          <button class="step-option" data-val="middle-aged">中年活跃人群 35–55y</button>
+          <button class="step-option" data-val="older">老年 &gt;55y</button>
+          <button class="step-option" data-val="female-runner">女性跑者</button>
+        </div>
+      </div>
+
+      <div class="picker-results" id="picker-results" style="display: none;">
+        <div class="results-header">加权鉴别诊断 Weighted Differential</div>
+        <div class="results-sub">Top candidates · click to open clinical card</div>
+        <div class="results-list" id="results-list"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     VIEW 3: PHYSICAL EXAM
+     ============================================ -->
+<section class="view" id="view-exam">
+  <div class="section-label">Part III · 特殊体征检查目录</div>
+  <h2 class="display">Physical <em>Examination</em> Catalog</h2>
+  <p class="lede">
+    髋关节特殊检查的困境在于 —— 敏感而不特异。合理的策略是把高敏感测试用于筛查（rule out），把高特异测试用于确认（rule in），永远成组解读。下表中的 Sens/Spec 数据来源于系统综述证据。
+  </p>
+
+  <div class="test-catalog" id="test-catalog"></div>
+</section>
+
+<!-- ============================================
+     VIEW 4: IMAGING LADDER
+     ============================================ -->
+<section class="view" id="view-imaging">
+  <div class="section-label">Part IV · 分级递进的影像学路径</div>
+  <h2 class="display">Imaging <em>Ladder</em></h2>
+  <p class="lede">
+    影像学不是"全套"检查，而是有顺序的问题回答。每一级影像回答特定的临床问题。过度检查增加假阳性（40%无症状MRI发现盂唇信号异常），欠检查漏诊骨应力反应。这是一个诊断链,不是清单。
+  </p>
+
+  <div class="imaging-flowchart">
+
+    <div class="imaging-level">
+      <div class="imaging-level-header">
+        <div class="imaging-level-num">I.</div>
+        <div>
+          <div class="imaging-level-title">平片 Radiographs <em style="font-style: italic; color: var(--surgical); font-weight: 400; font-size: 0.8em;">First-line · Always</em></div>
+          <div style="font-family: var(--mono); font-size: 0.75rem; color: var(--oxblood); margin-top: 0.2rem; letter-spacing: 0.1em;">ANSWER: 骨性形态、晚期OA、应力骨折线索、骨撕脱</div>
+        </div>
+      </div>
+      <div class="imaging-grid">
+        <div class="imaging-modality">
+          <div class="imaging-modality-name">AP骨盆位 AP Pelvis</div>
+          <div class="imaging-modality-en">standing, beam centered on pubic symphysis</div>
+          <p><strong>必看参数:</strong> Tönnis角（髋臼顶倾斜）、LCEA角（外侧CE角，≥25°正常，&lt;20°发育不良，&gt;40°过度覆盖）、alpha角侧位轮廓、crossover sign（髋臼后倾）、posterior wall sign。</p>
+          <span class="imaging-key">定位 Pincer / Dysplasia / OA Tönnis grade</span>
+        </div>
+        <div class="imaging-modality">
+          <div class="imaging-modality-name">Dunn / 45° lateral 位</div>
+          <div class="imaging-modality-en">modified Dunn at 45° flexion preferred</div>
+          <p><strong>必看参数:</strong> alpha角（&gt;55° 提示cam畸形）、head-neck offset、sphericity。45° Dunn位敏感性优于蛙式位。</p>
+          <span class="imaging-key">定位 Cam morphology · FAI workup</span>
+        </div>
+        <div class="imaging-modality">
+          <div class="imaging-modality-name">False-profile 位</div>
+          <div class="imaging-modality-en">Lequesne view · 65° oblique</div>
+          <p><strong>必看参数:</strong> 前方CE角（ACEA，&lt;20°前方覆盖不足），对发育不良和前方软骨评估至关重要。</p>
+          <span class="imaging-key">定位 Anterior acetabular coverage</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="imaging-level">
+      <div class="imaging-level-header">
+        <div class="imaging-level-num">II.</div>
+        <div>
+          <div class="imaging-level-title">超声 Ultrasound <em style="font-style: italic; color: var(--surgical); font-weight: 400; font-size: 0.8em;">Dynamic · Targeted</em></div>
+          <div style="font-family: var(--mono); font-size: 0.75rem; color: var(--oxblood); margin-top: 0.2rem; letter-spacing: 0.1em;">ANSWER: 软组织病变、动态弹响、积液、靶向干预引导</div>
+        </div>
+      </div>
+      <div class="imaging-grid">
+        <div class="imaging-modality">
+          <div class="imaging-modality-name">外侧结构扫查</div>
+          <div class="imaging-modality-en">GT complex · ITB</div>
+          <p>臀中/小肌肌腱止点、转子囊、ITB动态（动作位）。对 GTPS 的诊断已超越MRI成为首选。</p>
+          <span class="imaging-key">首选 · GTPS / Snapping ITB</span>
+        </div>
+        <div class="imaging-modality">
+          <div class="imaging-modality-name">前方动态</div>
+          <div class="imaging-modality-en">Iliopsoas, rectus femoris</div>
+          <p>髂腰肌内弹响（动态）、腱鞘炎、近端股直肌撕裂、腹股沟疝动态评估（Valsalva）。</p>
+          <span class="imaging-key">动态 snapping / RF tendinopathy</span>
+        </div>
+        <div class="imaging-modality">
+          <div class="imaging-modality-name">关节积液 / 注射引导</div>
+          <div class="imaging-modality-en">diagnostic / therapeutic</div>
+          <p>关节内积液、滑膜增厚；超声引导注射(诊断性麻醉)既可定位痛源，也可精准 PRP / 类固醇治疗。</p>
+          <span class="imaging-key">rule in intra-articular pain source</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="imaging-level">
+      <div class="imaging-level-header">
+        <div class="imaging-level-num">III.</div>
+        <div>
+          <div class="imaging-level-title">MRI / MRA <em style="font-style: italic; color: var(--surgical); font-weight: 400; font-size: 0.8em;">Gold standard for soft tissue</em></div>
+          <div style="font-family: var(--mono); font-size: 0.75rem; color: var(--oxblood); margin-top: 0.2rem; letter-spacing: 0.1em;">ANSWER: 盂唇、软骨、骨水肿、应力反应、肌腱撕裂</div>
+        </div>
+      </div>
+      <div class="imaging-grid">
+        <div class="imaging-modality">
+          <div class="imaging-modality-name">3T MRI 非增强</div>
+          <div class="imaging-modality-en">non-contrast high-field</div>
+          <p>3T 已能提供足够盂唇分辨率；必看：软骨下骨水肿、PLC-ALC junction 软骨、股骨颈应力反应。</p>
+          <span class="imaging-key">首选 · 骨水肿 / 应力骨折 / 肌腱</span>
+        </div>
+        <div class="imaging-modality">
+          <div class="imaging-modality-name">MR 关节造影 MRA</div>
+          <div class="imaging-modality-en">gadolinium intra-articular</div>
+          <p>盂唇撕裂金标准(Sens 90%+)。用于 cam/pincer 外观与盂唇损伤的确认、手术决策前。</p>
+          <span class="imaging-key">rule in labral tear · pre-op</span>
+        </div>
+        <div class="imaging-modality">
+          <div class="imaging-modality-name">MRA + 麻醉剂</div>
+          <div class="imaging-modality-en">anesthetic arthrogram</div>
+          <p>注射 1% 利多卡因 + 造影剂，注射后活动，疼痛缓解 &gt;50% 是关节内疼痛的高特异指标（AUC ~0.9）。</p>
+          <span class="imaging-key">诊断性麻醉 · localize pain source</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="imaging-level">
+      <div class="imaging-level-header">
+        <div class="imaging-level-num">IV.</div>
+        <div>
+          <div class="imaging-level-title">CT <em style="font-style: italic; color: var(--surgical); font-weight: 400; font-size: 0.8em;">Bone morphology · Pre-op planning</em></div>
+          <div style="font-family: var(--mono); font-size: 0.75rem; color: var(--oxblood); margin-top: 0.2rem; letter-spacing: 0.1em;">ANSWER: 3D 形态学、版本角、术前规划</div>
+        </div>
+      </div>
+      <div class="imaging-grid">
+        <div class="imaging-modality">
+          <div class="imaging-modality-name">3D-CT 重建</div>
+          <div class="imaging-modality-en">bony morphology mapping</div>
+          <p>股骨颈版本角（正常 10-20°）、髋臼版本（crossover 定量化）、cam 精确 mapping（12点钟方位）。关节镜术前规划必要。</p>
+          <span class="imaging-key">必做 · 任何FAI手术前</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="imaging-level">
+      <div class="imaging-level-header">
+        <div class="imaging-level-num">V.</div>
+        <div>
+          <div class="imaging-level-title">专项检查 Niche <em style="font-style: italic; color: var(--surgical); font-weight: 400; font-size: 0.8em;">When indicated</em></div>
+        </div>
+      </div>
+      <div class="imaging-grid">
+        <div class="imaging-modality">
+          <div class="imaging-modality-name">骨扫描 / SPECT-CT</div>
+          <p>隐匿性应力骨折（MRI阴性但高度怀疑）、复杂疼痛定位。</p>
+        </div>
+        <div class="imaging-modality">
+          <div class="imaging-modality-name">dGEMRIC / T2-mapping</div>
+          <p>软骨生化成像，用于保髋手术候选者的软骨质量量化。研究用途为主。</p>
+        </div>
+        <div class="imaging-modality">
+          <div class="imaging-modality-name">EMG / 神经传导</div>
+          <p>鉴别股外侧皮神经、闭孔神经、阴部神经卡压。</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============================================
+     VIEW 5: PRINCIPLES
+     ============================================ -->
+<section class="view" id="view-principles">
+  <div class="section-label">Part V · 诊疗原则与决策哲学</div>
+  <h2 class="display">Clinical <em>Principles</em></h2>
+  <p class="lede">
+    具体疾病的知识在前四节中。这一节汇总的是贯穿所有诊断决策的元原则 —— 当你面对一个未见过的病例时，这些框架帮助你不被表象牵着走。
+  </p>
+
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); gap: 2rem; margin-top: 2rem;">
+
+    <div style="background: var(--paper-warm); border: 1px solid var(--line); padding: 2rem;">
+      <div style="font-family: var(--mono); font-size: 0.7rem; color: var(--oxblood); letter-spacing: 0.2em; margin-bottom: 0.5rem;">PRINCIPLE 01</div>
+      <h3 style="font-family: var(--serif-display); font-weight: 600; font-size: 1.6rem; margin-bottom: 1rem; color: var(--ink-deep);">层 Layer first, structure second</h3>
+      <p style="font-size: 0.95rem; line-height: 1.75;">
+        每一个髋痛患者的第一道鉴别都是 <strong>关节内 vs 关节外</strong>。关节内疼痛：腹股沟 C-sign、深蹲困难、坐车位（FADIR）诱发、诊断性关节内麻醉可缓解 &gt;50%。外侧痛在 85% 情况下是软组织来源而非关节内。
+        <br><br>
+        一旦确定层次，再往下定位具体结构。<em style="color: var(--surgical); font-style: italic;">跳过层直接猜结构是诊断错误的最大来源。</em>
+      </p>
+    </div>
+
+    <div style="background: var(--paper-warm); border: 1px solid var(--line); padding: 2rem;">
+      <div style="font-family: var(--mono); font-size: 0.7rem; color: var(--oxblood); letter-spacing: 0.2em; margin-bottom: 0.5rem;">PRINCIPLE 02</div>
+      <h3 style="font-family: var(--serif-display); font-weight: 600; font-size: 1.6rem; margin-bottom: 1rem; color: var(--ink-deep);">影像 ≠ 诊断 Imaging is not diagnosis</h3>
+      <p style="font-size: 0.95rem; line-height: 1.75;">
+        <strong>无症状人群中影像"阳性"极其常见</strong>：54-75% 无症状成人 MRI 有盂唇信号异常；30-55% 无症状橄榄球运动员有 cam 形态；无症状跑者髂胫束增厚、臀中肌信号异常常见。
+        <br><br>
+        <em style="color: var(--oxblood); font-style: italic;">影像发现必须匹配临床综合征，才构成诊断。</em> 把影像当独立金标准是年轻医生常犯的错误。
+      </p>
+    </div>
+
+    <div style="background: var(--paper-warm); border: 1px solid var(--line); padding: 2rem;">
+      <div style="font-family: var(--mono); font-size: 0.7rem; color: var(--oxblood); letter-spacing: 0.2em; margin-bottom: 0.5rem;">PRINCIPLE 03</div>
+      <h3 style="font-family: var(--serif-display); font-weight: 600; font-size: 1.6rem; margin-bottom: 1rem; color: var(--ink-deep);">体征成组 Clusters beat solo tests</h3>
+      <p style="font-size: 0.95rem; line-height: 1.75;">
+        任何单一髋部特殊测试都敏感而不特异。FADIR 单独用于 FAI 诊断假阳性率高。
+        <br><br>
+        <strong>Cook clusters</strong>：FADIR + FABER + 内旋受限 + 腹股沟痛，4个全阳性时对症状性 FAI 的特异性 &gt;90%。
+        <br><br>
+        <strong>GTPS cluster</strong>：外侧压痛 + 抗阻外展痛 + 单足站立试验 30秒阳性，组合阳性对臀中肌肌腱病的 +LR &gt;5。
+      </p>
+    </div>
+
+    <div style="background: var(--paper-warm); border: 1px solid var(--line); padding: 2rem;">
+      <div style="font-family: var(--mono); font-size: 0.7rem; color: var(--oxblood); letter-spacing: 0.2em; margin-bottom: 0.5rem;">PRINCIPLE 04</div>
+      <h3 style="font-family: var(--serif-display); font-weight: 600; font-size: 1.6rem; margin-bottom: 1rem; color: var(--ink-deep);">诊断性注射 Diagnostic injection</h3>
+      <p style="font-size: 0.95rem; line-height: 1.75;">
+        当临床与影像不一致、或多结构病变共存、或术前决策模糊时，<strong>影像引导下关节内麻醉注射</strong>是定位疼痛来源最可靠的工具。
+        <br><br>
+        注射后 10-30 分钟记录活动痛变化，缓解 ≥50% 是关节内疼痛来源的高特异指标。<em style="color: var(--surgical); font-style: italic;">这个工具在复杂病例中价值被严重低估。</em>
+      </p>
+    </div>
+
+    <div style="background: var(--paper-warm); border: 1px solid var(--line); padding: 2rem;">
+      <div style="font-family: var(--mono); font-size: 0.7rem; color: var(--oxblood); letter-spacing: 0.2em; margin-bottom: 0.5rem;">PRINCIPLE 05</div>
+      <h3 style="font-family: var(--serif-display); font-weight: 600; font-size: 1.6rem; margin-bottom: 1rem; color: var(--ink-deep);">治疗阶梯 The ladder, not the leap</h3>
+      <p style="font-size: 0.95rem; line-height: 1.75;">
+        除了明确手术指征（大 Outerbridge IV 软骨病变 + 机械症状、完整肌腱撕裂伴功能丧失、急性应力骨折移位），绝大多数髋部运动损伤首选保守治疗 6-12 周。
+        <br><br>
+        阶梯顺序：<br>
+        <strong>(1)</strong> 负荷管理 + 生物力学纠正<br>
+        <strong>(2)</strong> 结构化康复 + 运动疗法<br>
+        <strong>(3)</strong> 注射治疗（类固醇 / PRP / 透明质酸）<br>
+        <strong>(4)</strong> 微创介入 / 再生疗法<br>
+        <strong>(5)</strong> 手术
+        <br><br>
+        <em style="color: var(--oxblood); font-style: italic;">跳级治疗会损害患者对后续阶梯的信任。</em>
+      </p>
+    </div>
+
+    <div style="background: var(--paper-warm); border: 1px solid var(--line); padding: 2rem;">
+      <div style="font-family: var(--mono); font-size: 0.7rem; color: var(--oxblood); letter-spacing: 0.2em; margin-bottom: 0.5rem;">PRINCIPLE 06</div>
+      <h3 style="font-family: var(--serif-display); font-weight: 600; font-size: 1.6rem; margin-bottom: 1rem; color: var(--ink-deep);">自然病史 Natural history matters</h3>
+      <p style="font-size: 0.95rem; line-height: 1.75;">
+        <strong>FAI</strong>: 有症状的 cam 形态者 10年进展至 OA 风险显著升高（相对风险 ~3.7）；但无症状 cam 并非必然进展。
+        <br><br>
+        <strong>GTPS</strong>: 1年自愈率约 33-50%，2年自愈率约 60-70%，多数为良性病程。
+        <br><br>
+        <strong>盂唇撕裂</strong>: 单独盂唇撕裂而无 FAI 骨性异常者手术预后差于有 FAI 者 —— <em style="color: var(--oxblood); font-style: italic;">盂唇撕裂是症状，不是原因。</em>
+        <br><br>
+        明确自然病史决定了你给患者的预后对话和治疗强度。
+      </p>
+    </div>
+
+  </div>
+</section>
+
+</main>
+
+<!-- ========== MODAL ========== -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal" id="modal">
+    <div class="modal-header">
+      <div class="modal-title-block">
+        <div class="modal-eyebrow" id="modal-eyebrow"></div>
+        <div class="modal-title" id="modal-title"></div>
+        <div class="modal-title-en" id="modal-title-en"></div>
+      </div>
+      <button class="modal-close" id="modal-close">×</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<!-- ========== FOOTER ========== -->
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div class="footer-brand">Hip &amp; Pelvis Sports Medicine Atlas</div>
+      <p class="footer-desc">
+        一个面向骨科运动医学医生的交互式诊疗参考系统。内容按解剖层次和诊断逻辑组织，每个疾病包含症状、体征、影像、rule in/rule out、病因、自然史、循证治疗阶梯。设计理念：把隐性知识结构化,帮助临床推理从经验判断向框架判断过渡。
+      </p>
+    </div>
+    <div class="footer-meta">
+      <strong>VERSION</strong><br>
+      2026.I Edition<br><br>
+      <strong>SCOPE</strong><br>
+      24 conditions · 5 views<br><br>
+      <strong>REFERENCES</strong><br>
+      Warwick agreement · DeLee &amp; Drez · Philippon protocol · BJSM consensus
+    </div>
+    <div class="footer-meta">
+      <strong>USAGE</strong><br>
+      Clinician reference only<br><br>
+      <strong>LIMITATIONS</strong><br>
+      Not a substitute for<br>clinical judgment<br><br>
+      <strong>UPDATE</strong><br>
+      Evidence curated to<br>2025 Q4
+    </div>
+  </div>
+  <div class="footer-disclaimer">
+    本系统为专业骨科运动医学医生的学习与辅助决策工具，不构成对具体患者的医疗建议，不替代个体化临床判断。使用中发现内容错漏,请以最新文献与临床指南为准。
+  </div>
+</footer>
+
+<script>
+// ============================================
+// DATA — Disease Spectrum
+// ============================================
+const DISEASES = [
+  // ==== INTRA-ARTICULAR ====
+  {
+    id: 'fai',
+    group: 'intra',
+    groupCN: '关节内病变',
+    groupEN: 'Intra-articular',
+    cn: '股骨髋臼撞击综合征',
+    en: 'Femoroacetabular Impingement Syndrome (FAIS)',
+    hint: 'Cam / Pincer / Mixed · 腹股沟痛 + 深屈曲受限',
+    tags: [['prevalence-high', '高发'], ['', '青年运动员'], ['surgical', '可手术']],
+    num: '1.01',
+    symptoms: '典型表现为腹股沟深部疼痛（C-sign），活动相关、深屈曲或长时间坐位加重。可伴外侧、前方大腿或臀部放射。晨起僵硬不明显（非炎症性）。机械症状（弹响、卡住）在合并盂唇撕裂时常见。通常 20-40 岁活跃人群，常见于需要反复屈髋-内旋动作的运动（冰球、足球、芭蕾、MMA）。',
+    signs: [
+      '**FADIR 试验**（屈曲-内收-内旋）: 最敏感筛查，Sens ~88%, Spec ~32%',
+      '**FABER 试验**: 辅助，阳性提示关节内或骶髂源',
+      '**屈髋内旋受限**: 与对侧比较 &gt;10° 差异提示骨性受限',
+      'Cluster: FADIR + FABER + 内旋受限 + 腹股沟痛(4项全阳性 → Spec &gt;90%)',
+      '步态评估: 单足站立骨盆下沉（Trendelenburg 阳性提示合并臀中肌无力）'
+    ],
+    history: '年轻运动员起病隐匿，活动相关疼痛进行性加重。既往无明显外伤。常有"从青春期开始就蹲不下去"的发育性背景。重要信息：运动项目类型（撞击运动 vs 耐力运动）、疼痛演变曲线、保守治疗反应、职业/运动需求。',
+    imaging: [
+      '**AP 骨盆位**: LCEA 角(正常25-40°)、Tönnis 角、crossover sign (pincer)、posterior wall sign',
+      '**45° Dunn 位**: alpha 角 &gt;55° 提示 cam 畸形（最敏感位置）',
+      '**False-profile**: 前方 CE 角评估前方覆盖',
+      '**MRA (关节造影)**: 盂唇撕裂的金标准，同时评估软骨状态',
+      '**3D-CT**: 术前必要，精确 cam mapping + 股骨/髋臼版本角评估'
+    ],
+    ruleIn: [
+      'FADIR 阳性 + 诊断性关节内注射阳性',
+      'alpha 角 &gt;60° + 匹配的症状和体征',
+      'LCEA &gt;40° 伴 crossover sign（pincer）+ 前方深蹲痛',
+      'MRA 证实盂唇撕裂 + cam/pincer 形态 + 临床体征'
+    ],
+    ruleOut: [
+      '髋关节活动度完全正常、FADIR 阴性 → FAI 可能性低',
+      '仅影像学有 cam 形态但完全无症状 → 仅 "cam 形态"，非 FAIS',
+      '主要为外侧或深臀痛 → 转向 GTPS 或深臀综合征',
+      '腹股沟痛但诊断性关节内注射无缓解 → 非关节内来源'
+    ],
+    pathology: [
+      '先天性/发育性股骨头-颈结合部骨性膨大 (cam)',
+      '或髋臼过度覆盖 (pincer: 局部或全髋)',
+      '→ 反复屈曲-内旋时股骨颈-髋臼撞击',
+      '→ 盂唇撕裂 + 软骨下剪切损伤',
+      '→ 早发性骨关节炎'
+    ],
+    naturalHistory: {
+      title: '症状性 FAI 的自然病程',
+      points: [
+        { pos: 5, label: '初期', time: '活动痛' },
+        { pos: 35, label: '发展', time: '机械症状 + 盂唇撕裂' },
+        { pos: 65, label: '进展', time: '软骨损伤' },
+        { pos: 92, label: '终末', time: '早发 OA (10-15y)' }
+      ],
+      note: '关键证据：症状性 cam 者 10 年进展至影像学 OA 的风险较正常形态者高约 3-4 倍。但无症状 cam 并非必然进展至 OA —— 这是决定"手术 vs 观察"的核心问题。'
+    },
+    treatment: [
+      {
+        stage: 'I. 保守起点',
+        trigger: '所有初诊患者（除非急性机械绞锁或已明确大面积软骨病变）',
+        title: '活动修正 + 结构化康复',
+        detail: [
+          '避免极限屈曲-内旋姿势（深蹲、长坐位、亚洲式蹲）',
+          '核心-臀肌激活训练（强调臀中肌+深层核心）',
+          '髋屈肌/内收肌柔韧性改善',
+          '6-12 周，每 4 周评估进展',
+          'NSAIDs 短期辅助'
+        ],
+        evidence: 'B'
+      },
+      {
+        stage: 'II. 注射干预',
+        trigger: '保守 6 周无改善，或诊断不明需定位疼痛源',
+        title: '影像引导关节内注射',
+        detail: [
+          '诊断用：利多卡因 → 活动后疼痛变化（缓解 &gt;50% 提示关节内来源）',
+          '治疗用：类固醇 + 局麻剂（短中期疼痛缓解，证据 B 级）',
+          'PRP: 新兴选择，但对盂唇/软骨病变证据仍有限',
+          '注射频次：≤3次/年，避免加速软骨退变'
+        ],
+        evidence: 'B'
+      },
+      {
+        stage: 'III. 关节镜手术',
+        trigger: '保守 3-6 月失败 + 影像确认 cam/pincer + 症状-体征-影像三重匹配',
+        title: 'Hip Arthroscopy',
+        detail: [
+          'Cam 成形术: 股骨头-颈结合部骨性重塑（恢复头-颈 offset）',
+          'Pincer 修整: 髋臼缘切除',
+          '盂唇修补 &gt; 盂唇切除（保留盂唇至关重要，FIRST 试验数据）',
+          '软骨处理: 微骨折（&lt;2cm²）或生物替代（大面积）',
+          'FIRST, FASHIoN, FIX RCT 数据：关节镜优于单纯理疗，5年 iHOT-33 优势显著'
+        ],
+        evidence: 'A'
+      },
+      {
+        stage: 'IV. 复杂重建',
+        trigger: '显著髋臼发育不良 (LCEA &lt;20°) 或严重版本异常',
+        title: 'PAO (髋臼周围截骨术)',
+        detail: [
+          '年轻发育不良患者（&lt;40y，Tönnis 0-1）',
+          '可联合关节镜处理盂唇',
+          '需关节保留外科中心完成'
+        ],
+        evidence: 'B'
+      },
+      {
+        stage: 'V. 终末补救',
+        trigger: 'Tönnis III / 年龄大 / 多结构失败',
+        title: '髋关节置换',
+        detail: ['THA —— 不在本文范围内'],
+        evidence: 'A'
+      }
+    ]
+  },
+
+  {
+    id: 'labrum',
+    group: 'intra',
+    groupCN: '关节内病变',
+    groupEN: 'Intra-articular',
+    cn: '盂唇撕裂',
+    en: 'Acetabular Labral Tear',
+    hint: '机械症状 (弹响/绞锁) + C-sign · 常伴 FAI',
+    tags: [['prevalence-high', '高发'], ['surgical', '可修补']],
+    num: '1.02',
+    symptoms: '腹股沟前方深部痛 + 机械症状（弹响、卡住、打软）。卡入感特别提示盂唇游离边/瓣状撕裂。深屈曲、旋转动作诱发。可有夜间痛（区别于纯撞击）。',
+    signs: [
+      'FADIR 阳性（Sens 高但非特异）',
+      'Anterior labral tear test / Scour 试验',
+      'FABER 试验常阳性',
+      '动态检查：屈曲-内收-内旋 → 过伸-外展-外旋 诱发弹响',
+      '关节内诊断性麻醉缓解 &gt;50% → 关节内来源'
+    ],
+    history: '常有屈曲-扭转外伤史，或在 FAI 背景上渐进出现机械症状。机械症状的新发往往提示盂唇从单纯退变进展到瓣状/撕脱撕裂。',
+    imaging: [
+      'MRA 为金标准（Sens ~90%, Spec ~90%）',
+      '3T 非增强 MRI 在熟练放射科医师手中接近 MRA',
+      '必须同时评估 FAI 骨性形态（盂唇撕裂 95% 合并 FAI 或发育不良）',
+      '分型参考 Seldes / Czerny 分型'
+    ],
+    ruleIn: [
+      'MRA 证实撕裂 + 机械症状 + FADIR 阳性',
+      '关节内注射诊断性缓解',
+      '匹配的骨性异常（cam/pincer/dysplasia）'
+    ],
+    ruleOut: [
+      '盂唇"高信号"但无机械症状 → 可能为年龄相关退变（无症状人群中 &gt;50%）',
+      '无骨性异常的单纯盂唇撕裂 → 需重新考虑其他病因（创伤、发育不良）',
+      '关节内注射无缓解 → 疼痛源非关节内'
+    ],
+    pathology: [
+      '机制：FAI 撞击反复剪切 · 发育不良过载 · 外伤扭转',
+      '盂唇-软骨交界处最脆弱',
+      '→ 盂唇-软骨剥离（"carpet delamination"）',
+      '→ 关节密封功能丧失 → 滑液流体力学改变 → 软骨退变加速'
+    ],
+    naturalHistory: {
+      title: '盂唇撕裂的演变',
+      points: [
+        { pos: 8, label: '隐匿', time: '无症状期' },
+        { pos: 32, label: '症状初发', time: '活动相关痛' },
+        { pos: 58, label: '机械症状', time: '弹响/卡住' },
+        { pos: 88, label: '软骨受累', time: '持续痛 + OA' }
+      ],
+      note: '单纯盂唇撕裂无骨性异常者手术预后差于 FAI 相关撕裂 —— 暗示盂唇撕裂更多是"症状"而非"原因"。纠正骨性撞击是保障盂唇修补效果的前提。'
+    },
+    treatment: [
+      {
+        stage: 'I. 保守评估',
+        trigger: '所有初诊；关节镜前至少 3 月保守尝试',
+        title: '活动修正 + 核心-臀部训练',
+        detail: ['避免极限屈曲-扭转', '针对性髋关节生物力学纠正', 'NSAIDs'],
+        evidence: 'C'
+      },
+      {
+        stage: 'II. 诊断性/治疗性注射',
+        trigger: '诊断不明或希望延迟手术',
+        title: '关节内注射',
+        detail: ['麻醉剂诊断定位', '类固醇可提供 3-6 月缓解', 'PRP 证据仍在积累（SIR 2023 综述）'],
+        evidence: 'B'
+      },
+      {
+        stage: 'III. 关节镜修补',
+        trigger: '保守失败 + 机械症状 + 影像确认 + 骨性异常匹配',
+        title: 'Arthroscopic Labral Repair',
+        detail: [
+          '修补 > 切除（保留盂唇密封功能）',
+          '同期处理 FAI 骨性病变',
+          '年龄 &lt;40y、Tönnis 0-1、无严重发育不良 → 最佳预后',
+          '术后 6 月恢复运动'
+        ],
+        evidence: 'A'
+      },
+      {
+        stage: 'IV. 盂唇重建',
+        trigger: '盂唇严重退变/组织不足',
+        title: '自体 ITB / 异体移植重建',
+        detail: ['高水平中心进行', '对严重盂唇缺失者可恢复密封'],
+        evidence: 'C'
+      }
+    ]
+  },
+
+  {
+    id: 'cartilage',
+    group: 'intra',
+    groupCN: '关节内病变',
+    groupEN: 'Intra-articular',
+    cn: '髋关节软骨损伤',
+    en: 'Chondral Lesion of the Hip',
+    hint: '常继发于 FAI; 软骨下骨水肿是关键信号',
+    tags: [['', '继发性'], ['surgical', '可处理']],
+    num: '1.03',
+    symptoms: '深部腹股沟痛 + 活动后加重 + 休息缓解（机械性疼痛）。晚期可有持续钝痛。往往与 FAI 或发育不良共存。',
+    signs: [
+      'FADIR 阳性',
+      'Scour 试验（压载荷 + 旋转）可诱发',
+      'ROM 受限（尤其内旋）',
+      '影像诊断权重 &gt; 体征'
+    ],
+    history: 'FAI / 发育不良病史；进行性活动耐受下降；既往关节镜史也增加风险。',
+    imaging: [
+      'MRA + 延迟 T2 mapping / dGEMRIC 评估软骨质量',
+      '软骨下骨水肿 = 关键预警信号，提示软骨下骨负荷超载',
+      'Outerbridge 分级（I-IV）用于镜下描述',
+      'PLC-ALC junction（前外上象限）最常受累'
+    ],
+    ruleIn: [
+      'MRA 软骨缺损 + 软骨下骨水肿 + 匹配症状',
+      '关节镜下 Outerbridge III-IV 病变'
+    ],
+    ruleOut: [
+      '单纯影像软骨信号异常无症状 → 不构成诊断',
+      '无骨水肿 + 无 FAI 背景 → 考虑其他病因'
+    ],
+    pathology: [
+      'FAI 反复撞击 → 软骨-盂唇交界分层',
+      '"Wave 征"：软骨下骨与软骨的剪切 → 软骨碎裂',
+      '软骨细胞坏死 + 基质降解 → 不可逆'
+    ],
+    naturalHistory: {
+      title: '软骨损伤的不可逆性',
+      points: [
+        { pos: 5, label: 'I-II 期', time: '可逆表面' },
+        { pos: 40, label: 'III 期', time: '部分层缺失' },
+        { pos: 75, label: 'IV 期', time: '全层软骨下' },
+        { pos: 95, label: 'OA', time: '关节间隙消失' }
+      ],
+      note: '软骨修复能力极有限。关节保留手术的核心是在软骨崩溃前纠正生物力学。一旦全层缺失，保留性手术价值大幅下降。'
+    },
+    treatment: [
+      {
+        stage: 'I. 生物力学纠正',
+        trigger: '首诊 + 保留策略窗口',
+        title: '减负 + 康复 + 纠正潜在 FAI',
+        detail: ['体重管理', '避免冲击', '髋关节稳定性训练'],
+        evidence: 'C'
+      },
+      {
+        stage: 'II. 保守药物 / 注射',
+        trigger: '症状性',
+        title: '透明质酸 / PRP / 脂肪源间充质细胞',
+        detail: ['HA 对髋 OA 证据弱于膝', 'PRP 对早期软骨病变可能有益（RCT 证据较膝关节薄弱）', '再生疗法仍在探索'],
+        evidence: 'C'
+      },
+      {
+        stage: 'III. 关节镜软骨手术',
+        trigger: '小面积全层缺失 + FAI 可纠正',
+        title: '微骨折 / AMIC / MACI',
+        detail: [
+          '微骨折：&lt;2cm² 局限病变',
+          'AMIC（基质诱导）: 中等面积',
+          'MACI（自体软骨细胞）: 研究性',
+          '同期 FAI 纠正必须'
+        ],
+        evidence: 'C'
+      },
+      {
+        stage: 'IV. 置换',
+        trigger: '广泛全层缺失 / 年龄适合',
+        title: 'THA',
+        detail: ['超出本文范围'],
+        evidence: 'A'
+      }
+    ]
+  },
+
+  {
+    id: 'ligtres',
+    group: 'intra',
+    groupCN: '关节内病变',
+    groupEN: 'Intra-articular',
+    cn: '圆韧带损伤',
+    en: 'Ligamentum Teres Injury',
+    hint: '扭转外伤后的顽固性深部痛; 易漏诊',
+    tags: [['', '少见但重要']],
+    num: '1.04',
+    symptoms: '深部腹股沟痛、机械症状、不稳感。常在扭转性外伤（滑雪、足球脱位）后出现；慢性者症状与盂唇撕裂难以区分。',
+    signs: [
+      'Log roll 试验',
+      'Gray 试验（屈90°-外展30°-外旋-抗阻内收）',
+      'FADIR / FABER 多为阳性但非特异',
+      '关节镜直视是诊断标准'
+    ],
+    history: '髋关节脱位或半脱位史、扭转外伤、多向不稳者。',
+    imaging: [
+      'MRA 敏感性有限（~40%）',
+      '3T MRI 正交三平面评估',
+      '关节镜直视确认'
+    ],
+    ruleIn: [
+      '扭转外伤 + 关节内深痛 + MRA 显示圆韧带信号异常 + 诊断性注射缓解',
+      '关节镜下直视确认'
+    ],
+    ruleOut: [
+      '无外伤史、无不稳感、影像完全阴性 → 不倾向圆韧带',
+      '盂唇撕裂单独能解释症状'
+    ],
+    pathology: [
+      '扭转-外展机制 → 圆韧带部分/完全撕裂',
+      '断裂终末端可嵌顿 → 机械症状',
+      '完全撕裂可致关节不稳'
+    ],
+    naturalHistory: {
+      title: '圆韧带损伤预后',
+      points: [
+        { pos: 12, label: '急性期', time: '0-6周' },
+        { pos: 50, label: '慢性痛', time: '易漏诊' },
+        { pos: 85, label: '关节镜确诊', time: '清理/重建' }
+      ],
+      note: '关节镜下是金标准；部分撕裂者对清理反应良好；完全撕裂致不稳者需考虑重建。'
+    },
+    treatment: [
+      {
+        stage: 'I. 保守',
+        trigger: '部分撕裂无不稳',
+        title: '稳定性康复',
+        detail: ['本体感觉 + 核心训练'],
+        evidence: 'C'
+      },
+      {
+        stage: 'II. 关节镜清理',
+        trigger: '机械症状 + 诊断明确',
+        title: 'Arthroscopic Debridement',
+        detail: ['去除撕裂瓣 + 同期处理合并病变'],
+        evidence: 'C'
+      },
+      {
+        stage: 'III. 重建',
+        trigger: '完全撕裂 + 不稳',
+        title: 'LT Reconstruction',
+        detail: ['高水平中心', '自体腱移植'],
+        evidence: 'D'
+      }
+    ]
+  },
+
+  // ==== LATERAL ====
+  {
+    id: 'gtps',
+    group: 'lateral',
+    groupCN: '外侧结构',
+    groupEN: 'Lateral',
+    cn: '大转子疼痛综合征',
+    en: 'Greater Trochanteric Pain Syndrome (GTPS)',
+    hint: '外侧痛 · 中年女性 · 跑者 · 侧卧不适',
+    tags: [['prevalence-high', '极高发'], ['', '中年女性']],
+    num: '2.01',
+    symptoms: '外侧大转子区钝痛，单纯侧卧（同侧或对侧）加重、久走/楼梯加重。无夜间持续剧痛。可向大腿外侧放射，与腰椎源或髂胫束痛需鉴别。40-60 岁女性最常见，女:男 ~4:1。',
+    signs: [
+      '大转子直接压痛（最敏感）',
+      '**30秒单足站立试验**: 30秒内引发外侧痛 → 高敏感',
+      '**抗阻外展 + 抗阻外旋试验**（De Bilck / FAdER 试验）',
+      'Ober 试验评估 ITB 紧张',
+      'Trendelenburg 步态（严重者）',
+      'Cluster: 压痛 + 抗阻外展痛 + 单足站立痛 → +LR &gt;5'
+    ],
+    history: '多为渐进性发作。相关因素：久坐职业 + 突增运动、BMI 偏高、骨盆宽度、下肢长度差、下肢生物力学异常（扁平足、膝外翻）、既往腰椎病史。跑者常见 —— 尤其是跑量突增后。',
+    imaging: [
+      '**超声为首选**：可见臀中/小肌肌腱低回声增厚、肌腱内钙化、局部积液',
+      'MRI 用于顽固/排除其他：显示肌腱病变、部分/全层撕裂、肌肉萎缩 + 脂肪浸润（慢性）',
+      '平片：无特异发现但排除骨性病变（转子撕脱、应力骨折）'
+    ],
+    ruleIn: [
+      '外侧压痛 + 抗阻外展痛 + 超声/MRI 显示肌腱病或撕裂',
+      '皮质类固醇试验性注射后疼痛明显缓解'
+    ],
+    ruleOut: [
+      '腰椎 MRI 示腰5/骶1 神经根病变能完整解释外侧痛 → GTPS 为继发/共存',
+      '压痛位于股直肌头而非大转子 → 股直肌肌腱病',
+      '深部坐骨/臀部痛占主导 → 深臀综合征',
+      '外侧痛伴腹股沟痛 + FADIR 阳性 → FAI 为主'
+    ],
+    pathology: [
+      '以往认为"转子囊炎" —— 现认识为错误',
+      '实际主导病理: **臀中/小肌肌腱病**（常累及 anterior facet）',
+      '肌腱基质退变 + 胶原纤维排列紊乱 + 新生血管（腱病而非炎症）',
+      '继发性: 转子囊反应性增厚 + ITB 弹跳性增强'
+    ],
+    naturalHistory: {
+      title: 'GTPS 的良性倾向',
+      points: [
+        { pos: 15, label: '初发', time: '活动相关痛' },
+        { pos: 50, label: '1 年', time: '33-50% 自愈' },
+        { pos: 75, label: '2 年', time: '60-70% 自愈' },
+        { pos: 95, label: '慢性化', time: '约 20-30%' }
+      ],
+      note: '多数为良性病程 —— 这是患者对话的核心信息。慢性化风险：BMI 高、生物力学异常未纠正、腰椎病变共存、反复类固醇注射。'
+    },
+    treatment: [
+      {
+        stage: 'I. 教育 + 负荷管理',
+        trigger: '所有初诊',
+        title: '活动修正 + 体位指导',
+        detail: [
+          '避免单侧侧卧（或枕头垫在膝间）',
+          '避免长时间交叉腿坐',
+          '体重管理',
+          '避免极端内收姿势'
+        ],
+        evidence: 'B'
+      },
+      {
+        stage: 'II. 结构化运动疗法',
+        trigger: '症状持续 &gt;6 周',
+        title: '臀肌负荷康复（核心治疗）',
+        detail: [
+          '**LEAP 试验证据（2018 BMJ）**: 运动疗法 8 周显著优于类固醇注射（8周 & 52周）',
+          '渐进性等长 → 等张 → 功能性臀中肌-臀小肌负荷',
+          '髋外展耐力、单腿控制',
+          '纠正 Trendelenburg 模式',
+          '疗程 8-12 周'
+        ],
+        evidence: 'A'
+      },
+      {
+        stage: 'III. 注射治疗',
+        trigger: '运动疗法无效 / 难以耐受康复起始疼痛',
+        title: '类固醇 vs PRP 的选择',
+        detail: [
+          '**类固醇**: 短期（≤ 3月）疗效明确，长期效果不优于运动疗法',
+          '**PRP**: 中长期（6-12月）可能优于类固醇（RCT 证据正在积累）',
+          '肌腱内注射避免 → 注射肌腱周围/囊内',
+          '重复注射 ≤ 2-3 次; 过度使用类固醇加速肌腱退变'
+        ],
+        evidence: 'B'
+      },
+      {
+        stage: 'IV. 介入 / 再生',
+        trigger: '顽固症状 + 影像肌腱病显著但无大撕裂',
+        title: '冲击波 / PRP / 肌腱刮除',
+        detail: [
+          '体外冲击波：中等证据（B）',
+          'Tenotomy（经皮肌腱刮除）某些中心使用'
+        ],
+        evidence: 'C'
+      },
+      {
+        stage: 'V. 手术',
+        trigger: '保守 6-12 月失败 + 全层撕裂 + 功能丧失',
+        title: '臀肌肌腱修补',
+        detail: [
+          '开放或内镜下修补',
+          '部分撕裂预后优于全层',
+          '显著脂肪浸润（Goutallier ≥ 2）者预后不佳',
+          '术后 6 月恢复活动'
+        ],
+        evidence: 'B'
+      }
+    ]
+  },
+
+  {
+    id: 'itbs-lateral',
+    group: 'lateral',
+    groupCN: '外侧结构',
+    groupEN: 'Lateral',
+    cn: '外侧弹响髋',
+    en: 'External Snapping Hip (Coxa Saltans Externa)',
+    hint: '可见可闻的外侧弹响 · ITB 跨越 GT',
+    tags: [['', '跑者/芭蕾'], ['', '多为良性']],
+    num: '2.02',
+    symptoms: '髋关节活动时（尤屈伸或旋转）外侧可见、可闻、常可感的弹响 —— 似髋关节"脱位"感觉。初始无痛，继发性疼痛源于反复 ITB 与大转子摩擦所致的 GTPS。',
+    signs: [
+      '站立患者屈-伸髋时肉眼可见 ITB 跨越大转子',
+      'Ober 试验阳性（ITB 紧张）',
+      '动态超声确认 ITB 弹跳 = 诊断金标准'
+    ],
+    history: '芭蕾、跑者、瑜伽从业者。多无外伤。双侧常见。部分病人是"主动弹响"者（可重复）。',
+    imaging: [
+      '动态超声为首选（直接可视化）',
+      'MRI 排除合并 GTPS / 肌腱病'
+    ],
+    ruleIn: ['可视/可听弹响 + 动态超声确认'],
+    ruleOut: ['弹响位于腹股沟 → 内侧弹响髋（髂腰肌）', '关节内"咔嗒"声 → 关节内弹响髋'],
+    pathology: ['ITB 后缘或臀大肌前缘反复越过大转子', '长期摩擦 → 转子囊反应 + 肌腱病'],
+    naturalHistory: {
+      title: '弹响髋自然病程',
+      points: [
+        { pos: 10, label: '无痛弹响', time: '良性表现' },
+        { pos: 50, label: '负荷性疼痛', time: 'GTPS 共存' },
+        { pos: 85, label: '顽固有痛', time: '手术候选' }
+      ],
+      note: '无痛弹响无需治疗 —— 教育最重要。有痛者处理与 GTPS 相同。'
+    },
+    treatment: [
+      {
+        stage: 'I. 教育 + 保守',
+        trigger: '无痛弹响',
+        title: '无需治疗',
+        detail: ['仅告知良性'],
+        evidence: 'C'
+      },
+      {
+        stage: 'II. 结构化康复',
+        trigger: '有痛弹响',
+        title: 'ITB/TFL 拉伸 + 臀肌强化',
+        detail: ['泡沫轴', '髋外展肌渐进负荷'],
+        evidence: 'B'
+      },
+      {
+        stage: 'III. 手术（罕见）',
+        trigger: '保守 ≥ 6 月失败 + 影响运动',
+        title: 'ITB 延长/Z 成形',
+        detail: ['内镜下优先', '预后良好但复发有报告'],
+        evidence: 'C'
+      }
+    ]
+  },
+
+  // ==== ANTERIOR ====
+  {
+    id: 'iliopsoas',
+    group: 'anterior',
+    groupCN: '前方结构',
+    groupEN: 'Anterior',
+    cn: '髂腰肌肌腱病 / 内侧弹响髋',
+    en: 'Iliopsoas Tendinopathy / Internal Snapping Hip',
+    hint: '前方深部弹响 · 屈髋抗阻痛',
+    tags: [['', '跑者/舞者']],
+    num: '3.01',
+    symptoms: '前方腹股沟深部痛，屈髋或起身时"咕咚"声或弹跳感。长时间坐立后起身加重。在髋人工置换术后是前方撞击疼痛的重要原因。',
+    signs: [
+      '抗阻屈髋痛（仰卧位抬腿抗阻）',
+      'Stinchfield 试验（抗阻 30° 屈髋）',
+      '髂腰肌拉伸（Thomas 位）诱发痛',
+      '动态超声证实弹响'
+    ],
+    history: '芭蕾、瑜伽、跑者、足球；髋臼杯置换后（前缘过度突出刺激髂腰肌）。',
+    imaging: [
+      '动态超声（首选）',
+      'MRI: 肌腱增厚、腱鞘炎、肌腱部分撕裂',
+      '平片: 评估髋臼假体前缘（THA 术后）'
+    ],
+    ruleIn: ['动态超声弹响 + 抗阻屈髋痛 + 超声引导诊断性麻醉缓解'],
+    ruleOut: ['腹股沟痛源于关节内 → 诊断性关节内注射更有效', '弹响位于外侧 → ITB'],
+    pathology: [
+      '髂腰肌肌腱在髂耻隆起/股骨头表面弹跳',
+      '反复摩擦 → 腱鞘炎 + 肌腱病',
+      'THA 后: 髋臼杯前缘突出 → 机械撞击'
+    ],
+    naturalHistory: {
+      title: '髂腰肌弹响病程',
+      points: [
+        { pos: 10, label: '无痛弹响', time: '良性' },
+        { pos: 50, label: '负荷性痛', time: '康复为主' },
+        { pos: 90, label: '顽固', time: '手术 3-5%' }
+      ],
+      note: '绝大多数保守治疗有效。THA 后性患者若保守无效，需考虑髋臼杯位置评估。'
+    },
+    treatment: [
+      {
+        stage: 'I. 保守',
+        trigger: '首诊',
+        title: '髋屈肌拉伸 + 核心-臀激活',
+        detail: ['避免激发动作', '拉伸 + 离心负荷'],
+        evidence: 'C'
+      },
+      {
+        stage: 'II. 超声引导注射',
+        trigger: '顽固/诊断不明',
+        title: '肌腱鞘类固醇 / PRP',
+        detail: ['诊断 + 治疗双重意义'],
+        evidence: 'C'
+      },
+      {
+        stage: 'III. 手术',
+        trigger: '≥ 6月保守失败',
+        title: '髂腰肌部分/完全延长（arthroscopic）',
+        detail: ['THA 后: 髋臼杯翻修（假体突出时）', '有屈髋无力风险 → 严格适应症'],
+        evidence: 'C'
+      }
+    ]
+  },
+
+  {
+    id: 'rectus',
+    group: 'anterior',
+    groupCN: '前方结构',
+    groupEN: 'Anterior',
+    cn: '股直肌近端肌腱病/撕脱',
+    en: 'Proximal Rectus Femoris Strain / Avulsion',
+    hint: '踢球/冲刺后前方髋/大腿撕裂痛',
+    tags: [['', '足球/冲刺']],
+    num: '3.02',
+    symptoms: '急性：踢球、冲刺、加速瞬间前方髋部撕裂样剧痛 + 功能丧失。慢性：反复的近端股直肌压痛 + 屈髋抗阻弱。年轻骨骺未闭患者可见 AIIS 骨性撕脱。',
+    signs: [
+      'AIIS 区域压痛',
+      '抗阻屈髋 / 膝伸诱发痛',
+      '被动膝屈曲（拉伸股直肌）痛',
+      '近端可触及硬结（瘢痕）或凹陷'
+    ],
+    history: '爆发性运动（踢球、短跑、起跳）。既往同侧拉伤或不完全撕脱。',
+    imaging: [
+      '超声: 急性期撕裂范围、血肿',
+      'MRI: 金标准 —— 部分 vs 全层、回缩距离、骨性撕脱',
+      '平片/CT: AIIS 撕脱骨折（青少年）'
+    ],
+    ruleIn: ['典型外伤机制 + MRI 确认肌腱破坏/撕脱'],
+    ruleOut: ['腹股沟而非 AIIS 痛 → 内收肌/耻骨源', '慢性隐匿痛无外伤 → FAI/髂腰肌'],
+    pathology: ['直头 vs 反射头（acetabular）', '直头起于 AIIS, 反射头起于髋臼上缘'],
+    naturalHistory: {
+      title: '股直肌损伤康复曲线',
+      points: [
+        { pos: 10, label: '急性', time: '0-2 w: PRICE' },
+        { pos: 40, label: '亚急性', time: '4-6 w 运动起步' },
+        { pos: 75, label: '康复', time: '8-12 w RTS' },
+        { pos: 95, label: '复发风险高', time: '50% 重返后 3m 内' }
+      ],
+      note: '拉伤复发率高（~30-50%），规范的渐进负荷康复 + 离心训练是预防复发的关键。'
+    },
+    treatment: [
+      {
+        stage: 'I. 急性期',
+        trigger: '伤后 0-2 周',
+        title: 'POLICE + 保护',
+        detail: ['避免激发动作', '早期等长收缩'],
+        evidence: 'B'
+      },
+      {
+        stage: 'II. 渐进康复',
+        trigger: '2-12 周',
+        title: '渐进负荷 + 离心训练',
+        detail: ['Nordic/Copenhagen 类训练', '模拟运动 pattern', '回归运动 criteria-based'],
+        evidence: 'B'
+      },
+      {
+        stage: 'III. 手术',
+        trigger: '完全撕脱 + 回缩显著 + 职业运动员',
+        title: '一期缝合 / 骨性撕脱固定',
+        detail: ['青少年 AIIS 撕脱骨折固定或保守 case-by-case'],
+        evidence: 'C'
+      }
+    ]
+  },
+
+  {
+    id: 'sports-hernia',
+    group: 'anterior',
+    groupCN: '前方结构',
+    groupEN: 'Anterior',
+    cn: '腹股沟痛综合征 / "运动性疝"',
+    en: 'Inguinal-related Groin Pain / Athletic Pubalgia',
+    hint: '足球运动员 · 腹股沟痛 · 无明显疝',
+    tags: [['prevalence-mid', '足球高发']],
+    num: '3.03',
+    symptoms: '腹股沟深痛，加速、变向、咳嗽、仰卧抬腿加重。无可触及疝。往往与 FAI、内收肌肌腱病共存（"hip-groin pain complex"）。',
+    signs: [
+      '腹直肌/联合腱区域压痛',
+      '抗阻仰卧起坐诱发',
+      '抗阻内收痛（内收肌共存）',
+      'Valsalva 诱发不适',
+      '无可触及疝'
+    ],
+    history: '足球、冰球、曲棍球 —— 任何需要快速方向改变的运动。',
+    imaging: [
+      '**动态超声**（Valsalva 下）评估后壁薄弱',
+      'MRI 腹股沟序列 —— Doha agreement 定义',
+      '合并评估 FAI、内收肌、耻骨联合'
+    ],
+    ruleIn: ['Doha agreement 临床检查聚类 + MRI 支持 + 内收肌/腹壁压痛'],
+    ruleOut: ['诊断性关节内注射显著缓解 → FAI 为主', '完全典型可触及疝 → 真性腹股沟疝'],
+    pathology: [
+      'Doha 2014 框架: 内收肌-related / 髂腰肌-related / 腹股沟-related / 耻骨-related / 髋-related',
+      '腹股沟后壁薄弱 + 内收肌 / 腹直肌附着异常剪切'
+    ],
+    naturalHistory: {
+      title: '腹股沟痛综合征',
+      points: [
+        { pos: 15, label: '初起', time: '活动相关痛' },
+        { pos: 50, label: '多结构共病', time: 'Hip-Groin complex' },
+        { pos: 85, label: '顽固', time: '手术占 10-20%' }
+      ],
+      note: '单独"运动疝"不再作为独立实体看待 —— Doha agreement 强调多因素诊断框架。'
+    },
+    treatment: [
+      {
+        stage: 'I. 保守',
+        trigger: '首诊',
+        title: '核心-内收肌协调康复',
+        detail: ['Hölmich 渐进性核心-内收肌训练', '活动修正', '8-12 周'],
+        evidence: 'B'
+      },
+      {
+        stage: 'II. 注射',
+        trigger: '诊断定位',
+        title: '针对性靶点注射',
+        detail: ['内收肌起点 / 耻骨联合 / 腹股沟管'],
+        evidence: 'C'
+      },
+      {
+        stage: 'III. 手术',
+        trigger: '≥ 3月保守失败',
+        title: '开放 Meshless 修补 / 内收肌 tenotomy',
+        detail: ['Meyers 等技术; 与普外科协作', '合并 FAI 者同期处理'],
+        evidence: 'B'
+      }
+    ]
+  },
+
+  // ==== POSTERIOR ====
+  {
+    id: 'deep-gluteal',
+    group: 'posterior',
+    groupCN: '后方 / 深臀',
+    groupEN: 'Posterior / Deep Gluteal',
+    cn: '深臀综合征',
+    en: 'Deep Gluteal Syndrome (incl. Piriformis)',
+    hint: '坐骨-臀深部痛 + 坐位加重 + 非椎间盘源坐骨神经症状',
+    tags: [['', '久坐人群']],
+    num: '4.01',
+    symptoms: '深部臀部/坐骨痛 + 久坐加重 + 坐骨神经样向后下肢放射。腰椎检查常阴性，腰骶 MRI 不足以解释症状。',
+    signs: [
+      '梨状肌区压痛',
+      'FAIR 试验（屈曲-内收-内旋）',
+      'Seated Piriformis Stretch 试验',
+      'Active Piriformis 试验（抗阻外展-外旋）',
+      '神经张力试验（Slump/SLR）可阳性但较腰源轻'
+    ],
+    history: '久坐职业、长距离骑行、摔伤臀部、外伤性肌肉变化。',
+    imaging: [
+      'MR 神经成像（MRN）: 梨状肌肥大/不对称、坐骨神经水肿',
+      '排除椎间盘 → 腰椎 MRI 必要',
+      '诊断性局麻注射（CT/超声引导）坐骨神经周围缓解 → 确认'
+    ],
+    ruleIn: ['MRN 异常 + 典型坐骨区痛 + 诊断性注射缓解 + 腰椎 MRI 不能解释'],
+    ruleOut: [
+      '腰椎 MRI 明确椎间盘压迫 L5/S1 神经根 → 椎间盘来源',
+      '坐骨结节区而非梨状肌区压痛 → 近端腘绳肌 / 坐骨结节滑囊'
+    ],
+    pathology: [
+      '不只是梨状肌 —— 深臀间室内坐骨神经可被梨状肌、上/下孖肌、闭孔内肌、股方肌、纤维束压迫',
+      '外伤性肌肉改变 + 瘢痕形成 + 解剖变异（坐骨神经穿梨状肌）'
+    ],
+    naturalHistory: {
+      title: '深臀综合征预后',
+      points: [
+        { pos: 15, label: '初诊', time: '易误诊为椎间盘' },
+        { pos: 50, label: '保守 6-12 月', time: '多数改善' },
+        { pos: 85, label: '顽固', time: '内镜 decompression' }
+      ],
+      note: '诊断本身是难点 —— 避免椎间盘源假阳性。'
+    },
+    treatment: [
+      {
+        stage: 'I. 保守',
+        trigger: '首诊',
+        title: '坐姿改善 + 梨状肌拉伸 + 神经滑动',
+        detail: ['避免长久坐压', '臀肌/髋外旋肌群灵活性', '神经松动 neural mobilization'],
+        evidence: 'C'
+      },
+      {
+        stage: 'II. 影像引导注射',
+        trigger: '诊断 / 治疗',
+        title: '梨状肌 / 坐骨神经周围注射',
+        detail: ['诊断性局麻 + 治疗性类固醇 / Botox'],
+        evidence: 'C'
+      },
+      {
+        stage: 'III. 内镜 decompression',
+        trigger: '≥ 6月保守失败 + 明确影像',
+        title: 'Endoscopic Sciatic Nerve Decompression',
+        detail: ['高水平中心', '清理压迫结构', '术后功能恢复良好'],
+        evidence: 'C'
+      }
+    ]
+  },
+
+  {
+    id: 'proximal-ham',
+    group: 'posterior',
+    groupCN: '后方 / 深臀',
+    groupEN: 'Posterior / Deep Gluteal',
+    cn: '近端腘绳肌肌腱病 / 撕脱',
+    en: 'Proximal Hamstring Tendinopathy / Avulsion',
+    hint: '坐骨结节痛 + 久坐加重 + 冲刺运动员',
+    tags: [['prevalence-mid', '耐力运动员'], ['surgical', '急性撕脱需手术']],
+    num: '4.02',
+    symptoms: '坐骨结节区深痛，久坐、跑步加速、爬山加重。急性撕脱：剧烈外伤后坐骨区撕裂感 + 大面积瘀斑。',
+    signs: [
+      '坐骨结节压痛',
+      'Puranen-Orava 试验（站立髋屈 + 膝伸 + 踝背屈）',
+      'Bent-knee stretch 试验',
+      '抗阻膝屈曲痛',
+      '急性撕脱: 坐骨结节空虚 + 大腿后侧瘀斑'
+    ],
+    history: '耐力运动员（跑者）、足球、水上滑水急刹车（经典撕脱机制）、舞者。',
+    imaging: [
+      'MRI 金标准: 肌腱病 vs 部分撕裂 vs 完全撕脱 + 回缩距离',
+      '超声: 筛查 + 注射引导',
+      '平片: 骨性撕脱（青少年）'
+    ],
+    ruleIn: [
+      '慢性: 坐骨结节压痛 + MRI 肌腱病',
+      '急性: 典型外伤 + MRI 全层撕脱 + 回缩'
+    ],
+    ruleOut: ['梨状肌区而非坐骨结节压痛 → 深臀综合征', '腰5-骶1 神经根症状 → 腰椎源'],
+    pathology: [
+      '半腱肌/股二头肌共联合腱（conjoint tendon）附着坐骨结节',
+      '慢性: 反复高张力负荷 → 肌腱病',
+      '急性: 屈髋 + 膝伸极限位突发牵拉 → 撕脱'
+    ],
+    naturalHistory: {
+      title: '近端腘绳肌损伤',
+      points: [
+        { pos: 10, label: '肌腱病', time: '保守主导' },
+        { pos: 40, label: '部分撕裂', time: 'case-by-case' },
+        { pos: 70, label: '完全撕脱 < 2cm', time: '早期手术' },
+        { pos: 95, label: '撕脱 > 2cm', time: '强烈建议手术' }
+      ],
+      note: '急性完全撕脱（尤其回缩 &gt;2cm）早期手术（&lt;4 周）修补预后显著优于延迟 —— 这是"不要犹豫手术"的典型场景。'
+    },
+    treatment: [
+      {
+        stage: 'I. 慢性肌腱病保守',
+        trigger: '慢性肌腱病',
+        title: '渐进性离心 + 重负荷训练',
+        detail: ['每周 3 次渐进性负荷', '12 周', '避免久坐'],
+        evidence: 'B'
+      },
+      {
+        stage: 'II. PRP / 体外冲击波',
+        trigger: '6-12 周保守失败',
+        title: '再生/机械刺激',
+        detail: ['PRP RCT 证据持续积累'],
+        evidence: 'C'
+      },
+      {
+        stage: 'III. 急性撕脱手术',
+        trigger: '完全撕脱 + 回缩 &gt;2cm + 功能需求',
+        title: '一期开放修补',
+        detail: [
+          '&lt;4 周内手术预后最佳',
+          '缝合锚钉至坐骨结节',
+          '术后 4-6 月恢复运动'
+        ],
+        evidence: 'B'
+      }
+    ]
+  },
+
+  {
+    id: 'ischiofemoral',
+    group: 'posterior',
+    groupCN: '后方 / 深臀',
+    groupEN: 'Posterior / Deep Gluteal',
+    cn: '坐骨股骨撞击',
+    en: 'Ischiofemoral Impingement',
+    hint: '后方深痛 · 行走加重 · 常被漏诊',
+    tags: [['', '易漏诊']],
+    num: '4.03',
+    symptoms: '深后方髋部/臀部痛，步长变大或髋外旋/外展/伸展位加重。女性多见（骨盆解剖因素）。',
+    signs: [
+      '长步试验 (Long-stride walking test)',
+      'IFI 试验（髋伸展 + 内收 + 外旋）',
+      '坐骨结节与小转子之间压痛',
+      'FABER 可阳性'
+    ],
+    history: '隐匿起病，女性、大步长者。',
+    imaging: [
+      'MRI 关键：股方肌 T2 高信号 + 坐骨-股骨间隙狭窄（IFS &lt;15-17mm）+ 股方肌空间狭窄（QFS &lt;8-10mm）',
+      '轴位 T2 脂肪抑制'
+    ],
+    ruleIn: ['MRI 符合 + 临床体征 + 诊断性注射缓解'],
+    ruleOut: ['坐骨结节压痛占主导 → 近端腘绳肌', '深臀神经症状 → 深臀综合征'],
+    pathology: ['骨盆解剖 + 股骨颈外翻/版本异常 → 小转子与坐骨撞击 → 股方肌挤压'],
+    naturalHistory: {
+      title: 'IFI 病程',
+      points: [
+        { pos: 20, label: '保守试验', time: '活动修正' },
+        { pos: 65, label: '顽固', time: '注射/减压' },
+        { pos: 90, label: '小转子切除', time: '罕见' }
+      ],
+      note: '保守为主；部分需影像引导注射；极少需手术。'
+    },
+    treatment: [
+      {
+        stage: 'I. 保守',
+        trigger: '首诊',
+        title: '活动修正 + 髋屈肌/外旋肌拉伸',
+        detail: ['避免过度髋伸展', '核心训练'],
+        evidence: 'C'
+      },
+      {
+        stage: 'II. 注射',
+        trigger: '诊断 / 治疗',
+        title: 'CT/US 引导股方肌注射',
+        detail: ['类固醇 / PRP'],
+        evidence: 'C'
+      },
+      {
+        stage: 'III. 手术',
+        trigger: '罕见',
+        title: '内镜下小转子切除',
+        detail: ['高水平中心'],
+        evidence: 'D'
+      }
+    ]
+  },
+
+  // ==== MEDIAL ====
+  {
+    id: 'adductor',
+    group: 'medial',
+    groupCN: '内侧结构',
+    groupEN: 'Medial',
+    cn: '内收肌相关腹股沟痛',
+    en: 'Adductor-related Groin Pain',
+    hint: '内收肌起点痛 · 足球、冰球 · Hölmich 诊断',
+    tags: [['prevalence-high', '足球顶级多发']],
+    num: '5.01',
+    symptoms: '内侧腹股沟 / 内收肌起点痛，变向、冲刺、踢球加重。慢性者休息后启动痛。Doha agreement 定义。',
+    signs: [
+      '内收肌起点（耻骨）压痛',
+      '抗阻内收痛（squeeze 试验）',
+      '被动外展痛',
+      'Hölmich 诊断标准'
+    ],
+    history: '足球、冰球、橄榄球；往往双侧；常伴髋关节活动度减少和核心稳定性不足。',
+    imaging: [
+      'MRI: 内收肌起点水肿、部分撕裂、耻骨骨髓水肿',
+      '平片排除耻骨应力',
+      '动态超声合并评估腹股沟管'
+    ],
+    ruleIn: ['内收肌起点压痛 + squeeze 阳性 + MRI 起点病变'],
+    ruleOut: ['耻骨联合区为主 → 耻骨炎/联合相关', '诊断性关节内注射缓解 → FAI 主导'],
+    pathology: ['内收长肌最常累及', '反复离心负荷 + 核心稳定不足 → 起点微撕裂/肌腱病'],
+    naturalHistory: {
+      title: '内收肌腹股沟痛',
+      points: [
+        { pos: 15, label: '初发', time: '活动相关' },
+        { pos: 50, label: '慢性化', time: '共病常见' },
+        { pos: 85, label: '手术少数', time: 'Tenotomy' }
+      ],
+      note: '康复为核心 —— Hölmich 核心-内收肌渐进训练是证据级最高的方案。'
+    },
+    treatment: [
+      {
+        stage: 'I. 结构化康复',
+        trigger: '所有慢性患者',
+        title: 'Hölmich 主动训练方案',
+        detail: [
+          '核心稳定 + 髋外展-内收协调',
+          'Copenhagen adduction 离心训练',
+          '8-12 周'
+        ],
+        evidence: 'A'
+      },
+      {
+        stage: 'II. 注射',
+        trigger: '顽固症状',
+        title: '起点针对性注射',
+        detail: ['类固醇 / PRP'],
+        evidence: 'C'
+      },
+      {
+        stage: 'III. 手术',
+        trigger: '≥ 3月失败',
+        title: '内收肌部分 tenotomy',
+        detail: ['极少数'],
+        evidence: 'C'
+      }
+    ]
+  },
+
+  {
+    id: 'osteitis-pubis',
+    group: 'medial',
+    groupCN: '内侧结构',
+    groupEN: 'Medial',
+    cn: '耻骨联合炎 / 耻骨相关痛',
+    en: 'Osteitis Pubis / Pubic-related Groin Pain',
+    hint: '耻骨联合中央痛 · 足球运动员 · MRI 骨髓水肿',
+    tags: [['', '足球']],
+    num: '5.02',
+    symptoms: '耻骨联合中央痛，剪切/变向加重。常与内收肌肌腱病、腹股沟痛综合征共存。',
+    signs: ['耻骨联合中线压痛', '抗阻内收/抗阻仰卧起坐诱发'],
+    history: '足球、冰球、曲棍球; 反复离心剪切。',
+    imaging: [
+      'MRI: 耻骨联合骨髓水肿 + 关节囊变 + 不稳信号',
+      'Flamingo 位平片: 耻骨联合不稳',
+      'CT: 骨结构'
+    ],
+    ruleIn: ['MRI 骨髓水肿 + 中线压痛 + 典型诱发'],
+    ruleOut: ['侧方内收肌起点为主 → 内收肌相关', '深部髋关节痛 → FAI'],
+    pathology: ['反复剪切 → 耻骨联合力学过载 → 骨髓水肿 → 关节面侵蚀'],
+    naturalHistory: {
+      title: '耻骨炎病程',
+      points: [
+        { pos: 15, label: '发作', time: '数月到年' },
+        { pos: 50, label: '慢性化', time: '50% &gt; 6月' },
+        { pos: 85, label: '顽固', time: '注射/手术' }
+      ],
+      note: '慢性化倾向明显；需综合治疗（内收肌 + 核心 + 耻骨联合）。'
+    },
+    treatment: [
+      {
+        stage: 'I. 综合康复',
+        trigger: '首诊',
+        title: '与内收肌方案共同',
+        detail: ['核心稳定 + 骨盆带控制'],
+        evidence: 'B'
+      },
+      {
+        stage: 'II. 注射',
+        trigger: '顽固',
+        title: '影像引导联合注射',
+        detail: ['类固醇 / PRP'],
+        evidence: 'C'
+      },
+      {
+        stage: 'III. 手术',
+        trigger: '极少',
+        title: '耻骨联合清理 / 固定',
+        detail: ['高水平中心'],
+        evidence: 'D'
+      }
+    ]
+  },
+
+  // ==== BONY ====
+  {
+    id: 'femoral-neck-stress',
+    group: 'bony',
+    groupCN: '骨性损伤',
+    groupEN: 'Bony',
+    cn: '股骨颈应力骨折',
+    en: 'Femoral Neck Stress Fracture',
+    hint: '女性跑者 / 军训 · 腹股沟负重痛 · 不能漏诊',
+    tags: [['prevalence-mid', '军训高发'], ['', '⚠️ 紧急']],
+    num: '6.01',
+    symptoms: '腹股沟负重痛，夜间休息痛可有（提示严重）。活动后加重，休息缓解但不完全。女性跑者 + 低 BMI + 月经不规律（女性运动员三联征）是高危人群。',
+    signs: [
+      '腹股沟深部负重痛',
+      'Hopping 试验 (单足跳) 诱发',
+      'Patrick/FABER 阳性',
+      'Fulcrum 试验阳性 (下肢支点 + 腹股沟压痛)',
+      '<strong style="color: var(--rule-out)">警惕：任何 hopping 痛 + 跑者史 → 必须排除！</strong>'
+    ],
+    history: '跑量突增、军训、女性运动员三联征（能量不足 + 月经紊乱 + 骨密度下降）、维生素 D 缺乏、髋发育不良。',
+    imaging: [
+      '**MRI 为首选**（敏感性最高）: T2 高信号 + STIR 水肿 + T1 骨折线',
+      '平片通常阴性（早期）或仅有轻度硬化',
+      '骨扫描敏感但特异性不足',
+      'DEXA 评估骨密度'
+    ],
+    ruleIn: ['MRI 骨髓水肿 + 皮质骨折线 + 典型病史'],
+    ruleOut: ['无负重痛 + MRI 阴性 → 可排除', '关节内诊断性注射缓解 → 非骨性来源'],
+    pathology: [
+      '压缩侧（下内）骨折 → 稳定，保守可愈',
+      '张力侧（上外）骨折 → 不稳定，完全骨折/移位风险高',
+      '微损伤 > 重塑 → 疲劳骨折'
+    ],
+    naturalHistory: {
+      title: '股骨颈应力骨折',
+      points: [
+        { pos: 10, label: '压缩侧保守', time: '6-12 w' },
+        { pos: 40, label: '张力侧警戒', time: '可能需手术' },
+        { pos: 80, label: '未及时识别', time: '完全骨折' },
+        { pos: 95, label: '灾难性', time: '股骨头坏死' }
+      ],
+      note: '张力侧（上外）骨折一旦完全化 → 股骨头缺血坏死风险极高，终身改变运动能力。<strong style="color:var(--rule-out);">这是不可漏诊的病。</strong>'
+    },
+    treatment: [
+      {
+        stage: 'I. 压缩侧保守',
+        trigger: '下内侧骨折 + 无移位',
+        title: '非负重 6 周 → 渐进负重',
+        detail: [
+          '拐杖 NWB × 6周',
+          '周期性 MRI 随访',
+          '维生素 D + 钙 + 骨密度纠正',
+          '女性运动员三联征评估',
+          '12 周回归低冲击，16-20 周跑步'
+        ],
+        evidence: 'B'
+      },
+      {
+        stage: 'II. 张力侧手术',
+        trigger: '上外侧骨折 / 完全骨折线 / 移位',
+        title: '内固定（空心钉）',
+        detail: [
+          '预防完全骨折和移位',
+          '保留股骨头血供',
+          '术后非负重 6-12 周'
+        ],
+        evidence: 'B'
+      },
+      {
+        stage: 'III. 代谢优化',
+        trigger: '所有患者',
+        title: '骨健康综合管理',
+        detail: [
+          'Vit D 充足（&gt;30 ng/mL）',
+          '钙摄入',
+          '月经恢复（女运动员）',
+          '营养师介入'
+        ],
+        evidence: 'A'
+      }
+    ]
+  },
+
+  {
+    id: 'avulsion',
+    group: 'bony',
+    groupCN: '骨性损伤',
+    groupEN: 'Bony',
+    cn: '骨盆撕脱骨折',
+    en: 'Pelvic Apophyseal Avulsion Fracture',
+    hint: '青少年爆发运动后撕裂痛 · AIIS/坐骨/髂嵴',
+    tags: [['', '青少年']],
+    num: '6.02',
+    symptoms: '青少年（骨骺未闭）爆发性动作后局部剧痛 + 功能丧失。AIIS (股直肌), 坐骨结节 (腘绳肌), ASIS (缝匠肌), 髂嵴 (腹肌) 典型。',
+    signs: ['撕脱骨标志点压痛', '被动拉伸对应肌肉诱发剧痛', '抗阻肌肉收缩引发剧痛'],
+    history: '14-25 岁, 足球/田径/体操爆发动作。',
+    imaging: ['平片多可诊断', 'MRI 评估软组织 + 排除合并伤', 'CT 测量移位'],
+    ruleIn: ['青少年典型机制 + 平片骨性撕脱'],
+    ruleOut: ['成人无骨性撕脱 → 肌腱源'],
+    pathology: ['骨骺尚未闭合 → 肌腱附着点骨化中心 weakest link'],
+    naturalHistory: {
+      title: '撕脱预后',
+      points: [
+        { pos: 20, label: '保守', time: '&lt;2cm 移位' },
+        { pos: 70, label: '手术', time: '&gt;2cm 或运动员' },
+        { pos: 95, label: '愈合', time: '良好' }
+      ],
+      note: '多数保守愈合良好；显著移位或职业运动员倾向早期固定。'
+    },
+    treatment: [
+      {
+        stage: 'I. 保守',
+        trigger: '移位 &lt;2cm',
+        title: '相对休息 + 渐进康复',
+        detail: ['6-12 周恢复'],
+        evidence: 'B'
+      },
+      {
+        stage: 'II. 手术',
+        trigger: '移位 ≥ 2cm 或职业运动员',
+        title: '螺钉/缝合固定',
+        detail: ['恢复更快, 避免不愈合'],
+        evidence: 'C'
+      }
+    ]
+  },
+
+  // ==== NEURAL ====
+  {
+    id: 'meralgia',
+    group: 'neural',
+    groupCN: '神经卡压',
+    groupEN: 'Neural',
+    cn: '感觉异常性股痛 (股外侧皮神经卡压)',
+    en: 'Meralgia Paresthetica',
+    hint: '大腿前外侧麻木/烧灼 · 腰带/肥胖',
+    tags: [['', '肥胖/紧身裤']],
+    num: '7.01',
+    symptoms: '大腿前外侧 handheld-size 麻木、烧灼、蚁走感。无运动功能丧失。久立、紧身裤、腰带、孕期加重。',
+    signs: ['Tinel (ASIS 内下 1-2cm)', '感觉测试（针刺觉减退区域）', '肌力正常'],
+    history: '肥胖、紧身衣、腰带、孕期、糖尿病。',
+    imaging: ['多为临床诊断', '超声可引导阻滞', 'MRN 顽固时使用'],
+    ruleIn: ['典型分布 + Tinel + 神经阻滞缓解'],
+    ruleOut: ['腰椎神经根分布 → 椎间盘', '伴运动无力 → 其他神经'],
+    pathology: ['LFCN 在腹股沟韧带下穿出时受压'],
+    naturalHistory: {
+      title: '感觉异常性股痛',
+      points: [
+        { pos: 20, label: '诱因去除', time: '&gt;60% 缓解' },
+        { pos: 60, label: '神经阻滞', time: '有效' },
+        { pos: 90, label: '松解手术', time: '极少数' }
+      ],
+      note: '去除机械压迫（紧身衣、减重）多数缓解。'
+    },
+    treatment: [
+      {
+        stage: 'I. 诱因去除',
+        trigger: '首诊',
+        title: '生活方式',
+        detail: ['松腰带', '减重', '避免紧身裤'],
+        evidence: 'C'
+      },
+      {
+        stage: 'II. 神经阻滞',
+        trigger: '顽固',
+        title: '超声引导阻滞',
+        detail: ['类固醇 + 局麻; 可重复'],
+        evidence: 'C'
+      },
+      {
+        stage: 'III. 手术',
+        trigger: '≥ 6 月失败',
+        title: '神经松解或切断',
+        detail: ['罕见'],
+        evidence: 'D'
+      }
+    ]
+  }
+];
+
+
+// ============================================
+// ENHANCED DATA · Expert-Level Addenda
+// redFlags / evidenceDetails / typicalCase / controversies
+// Indexed by disease id, merged at render time
+// ============================================
+const ENHANCED = {
+
+  // ==================================================
+  // FAI — Femoroacetabular Impingement Syndrome
+  // ==================================================
+  fai: {
+    redFlags: [
+      { flag: '夜间静息痛持续加重 + 非活动相关', action: '警惕肿瘤、感染、缺血坏死 → MRI + 炎症指标' },
+      { flag: '短期内关节活动度急剧丧失 + 发热', action: '化脓性关节炎排除 → 急诊穿刺 + 血培养' },
+      { flag: '皮质类固醇使用史 / 酗酒史 / 镰状细胞 / SLE', action: '警惕股骨头缺血坏死（ONFH）→ MRI T1/STIR' },
+      { flag: 'LCEA < 20° + 年轻女性', action: '实际为发育不良而非单纯 FAI，关节镜单独处理可能加重不稳 → 评估 PAO' }
+    ],
+    evidenceDetails: {
+      'III. 关节镜手术': {
+        trials: [
+          {
+            name: 'FASHIoN (Lancet 2018)',
+            n: 348,
+            followUp: '12 mo (延展至 60 mo)',
+            effect: 'iHOT-33 组间差 +6.8 分 (95% CI 1.7–12.0)，MCID = 6.1',
+            fragility: 'FI ≈ 3（骨科 RCT 典型低水平）',
+            exclusion: 'LCEA < 20°（发育不良）、Tönnis ≥ 2、既往同侧手术',
+            note: '第一个髋镜 vs PT 的大样本多中心 RCT。5 年随访（Griffin 2024）优势持续，但 18% PT 组最终交叉至手术。'
+          },
+          {
+            name: 'FIRST (CJSM 2020)',
+            n: 220,
+            followUp: '12 mo',
+            effect: 'HOS-ADL 无显著组间差（髋镜 clean 盂唇 vs 骨成形+盂唇处理）',
+            fragility: 'N/A（阴性）',
+            exclusion: '混合 cam/pincer、既往关节镜史',
+            note: '提示"盂唇处理"这一环节的必要性被高估——骨性纠正才是核心。'
+          },
+          {
+            name: 'UK FIX (BMJ 2019)',
+            n: 222,
+            followUp: '8 mo',
+            effect: 'HOS-ADL +10 分（髋镜 vs PT + 注射）',
+            fragility: 'FI ≈ 5',
+            exclusion: '骨关节炎 Tönnis ≥ 2、发育不良',
+            note: '短期随访，长期（5y）获益维持但幅度衰减'
+          }
+        ],
+        keyPoint: '三个 RCT 汇总提示：髋镜对 FAI 症状性者 12 个月短期获益 clinically meaningful，但 (1) fragility 普遍低 (2) PT 组 15-25% 交叉率 (3) 长期结构保护作用尚无 10 年 RCT 数据。'
+      },
+      'IV. 复杂重建': {
+        trials: [
+          {
+            name: 'Bernese PAO 长期随访 (Steppacher JBJS 2008 + 更新队列)',
+            n: '约 63 髋 → 扩展队列',
+            followUp: '20 y',
+            effect: '60% 髋保留至 20 年，年龄 < 30 + Tönnis 0-1 + 骨关节匹配良好者最优',
+            fragility: 'N/A（队列研究非 RCT）',
+            exclusion: 'Tönnis ≥ 2、晚期软骨病变、明显股骨畸形未纠正',
+            note: 'PAO 疗效的"证据天花板"是长期队列，非 RCT。2024 年 ANCHOR 注册数据显示多中心效果可复制。'
+          }
+        ],
+        keyPoint: 'PAO 的适应证窗口比通常认知更窄：需要同时满足骨龄、软骨状态、矫正目标三项。误用于已有软骨损害者加速退变。'
+      }
+    },
+    typicalCase: {
+      title: '"以为是髂腰肌，实为 FAI"的典型陷阱',
+      vignette: '28 岁男性业余足球运动员，6 月腹股沟深部痛，以屈髋动作最甚（踢球、系鞋带）。外院诊断"髂腰肌肌腱炎"，休息 + NSAIDs + 局部针灸 3 月无效。',
+      examination: 'FADIR 阳性（再现 C-sign 痛）；屈髋内旋受限较对侧 15°；FABER 阳性但对侧正常。Stinchfield 阳性但程度较轻。',
+      imaging: '45° Dunn 位 α 角 68°（对侧 42°）；LCEA 32°（正常）；MRA 见前上盂唇 2-3 点钟位撕裂。',
+      decision: '诊断性关节内注射利多卡因 → 30 分钟后踢球动作痛缓解 85%。保守 3 月未尝试过结构化康复 → 转 Philippon 式髋特异性 PT 方案 12 周。',
+      outcome: 'PT 12 周后 iHOT-33 从 48 升至 62（MCID+），但机械症状持续 → 髋镜：cam 成形 + 盂唇修补。术后 9 月重返足球。',
+      reflection: [
+        '关键教训一：FADIR 的高 Sens 意味着阴性可 rule out，但"髂腰肌痛"诊断不应在未做 FADIR + 内旋测量前下。',
+        '关键教训二：诊断性注射是区分关节内/关节外的最强工具，比任何影像学单独使用更定位。',
+        '关键教训三：保守治疗不是"休息 + 药物"，而是结构化的髋特异性力学训练——这一点的区分是 FAI 保守治疗"失败率"数据的最大混杂因素。'
+      ]
+    },
+    controversies: [
+      {
+        topic: '无症状 cam 形态 → 是否干预？',
+        current: '2016 Warwick 一致声明明确定义 FAIS 需三联（症状 + 体征 + 影像），但年轻竞技运动员的无症状 cam 是否预防性手术仍无 RCT 数据。',
+        frontier: 'CHASE 研究（在研）追踪青少年球员 cam 形态进展；2024 AJSM 数据显示无症状 cam 10 年症状化率约 25%，但预防手术风险获益比未明。'
+      },
+      {
+        topic: '盂唇修补 vs 重建 vs 增强',
+        current: '修补是标准，但盂唇组织不足（< 2mm 或严重退变）时选择争议。',
+        frontier: '2023-2024 多项比较研究（Domb, Philippon 团队）提示节段性重建对组织不足者 PROs 非劣于或优于修补；增强技术（capsular-labral augmentation）为新兴选项，长期数据缺乏。'
+      },
+      {
+        topic: '关节囊处理（capsular closure vs 放任）',
+        current: '过去争议激烈，现在共识偏向修补关节囊（interportal capsulotomy 闭合）以降低 micro-instability 风险。',
+        frontier: '2025 AAOS 系统综述提示常规闭合降低翻修率，但对宽松型关节囊者（EDS、女性）可能需要 capsular plication 而非单纯缝合。'
+      },
+      {
+        topic: '髋镜术后早发骨关节炎风险',
+        current: 'Tönnis 0-1 者 10 年 THA 率约 5-10%，≥ 2 者急剧升高。',
+        frontier: '"软骨下骨水肿"作为术前预后标志物研究活跃；T2 mapping 和 dGEMRIC 预测手术获益研究在多中心展开。'
+      },
+      {
+        topic: '髋镜 vs PAO 在临界发育不良（LCEA 18-25°）',
+        current: '指南尚未统一，LCEA 20° 成为经验性阈值但证据薄弱。',
+        frontier: 'ANCHOR 注册数据分析表明髋镜单独处理临界发育不良 5 年翻修率显著升高；正形成"LCEA 18-22° + 股骨版本异常 → 倾向 PAO"的分层共识。'
+      }
+    ]
+  },
+
+  // ==================================================
+  // LABRUM — Acetabular Labral Tear
+  // ==================================================
+  labrum: {
+    redFlags: [
+      { flag: '急性外伤后关节不能负重 + 股骨头位置异常', action: '髋关节脱位/半脱位 → 急诊复位 + CT 评估伴行骨折' },
+      { flag: '年轻运动员无机械症状但持续夜间痛', action: '骨应力反应可能与盂唇撕裂共存或独立存在 → MRI 必须覆盖股骨颈' },
+      { flag: '影像学盂唇"信号"但无临床匹配体征', action: '无症状人群中盂唇信号异常率 >50%，不构成诊断（Register et al. AJSM 2012）' }
+    ],
+    evidenceDetails: {
+      'III. 关节镜修补': {
+        trials: [
+          {
+            name: 'Krych et al. AJSM 2013 + Meta (Arthroscopy 2022)',
+            n: '系统综述汇总 >2000 例',
+            followUp: '2-10 y',
+            effect: '修补组 iHOT-33 平均改善 28 分 vs 切除组 18 分；二次手术率 5% vs 14%',
+            fragility: 'N/A（观察性汇总）',
+            exclusion: '骨关节炎晚期、盂唇组织严重退变',
+            note: '修补对密封功能的恢复是理论基础，但组织学证实的"愈合"并不总是发生（可能是力学稳定 > 生物愈合）'
+          },
+          {
+            name: 'Domb PAR Study (AJSM 2021)',
+            n: 300,
+            followUp: '5 y',
+            effect: '盂唇重建 vs 修补 在严重退变者 PROs 无差异但前者翻修率更低',
+            fragility: 'FI ≈ 4',
+            exclusion: 'Tönnis ≥ 2',
+            note: '重建的适应证正从"救援"扩展到"组织不足的一线"'
+          }
+        ],
+        keyPoint: '修补是标准；但"修补 vs 切除 vs 重建"的选择应基于组织质量和撕裂类型，不是术者偏好。瓣状撕裂（flap tear）+ 组织良好 → 修补；广泛退变/分层 → 重建。'
+      }
+    },
+    typicalCase: {
+      title: '"单纯盂唇撕裂"的陷阱——未识别发育不良',
+      vignette: '24 岁女性瑜伽教练，1 年腹股沟痛 + 机械弹响，坐位起身加重。外院 MRA 见前上盂唇撕裂，行关节镜盂唇修补，术后 6 月症状复发且加重。',
+      examination: '（翻修术前）FABER 阳性；apprehension 阳性（外展 + 外旋时不适）；Beighton 评分 6/9（全身松弛）。',
+      imaging: '复查 AP 骨盆：LCEA 19°（临界-轻度发育不良）；FEAR 指数 +6°（正值提示不稳）。原始 MRA 未做充分骨性形态评估。',
+      decision: '诊断为"发育不良相关盂唇撕裂 + 术后 micro-instability"。转关节保留外科中心行 PAO + 关节镜盂唇重建。',
+      outcome: '术后 18 月 iHOT-33 79 分（术前 35 分），恢复瑜伽教学。',
+      reflection: [
+        '关键教训一：盂唇撕裂几乎从不"单独"发生——95% 合并骨性异常。术前必须系统评估 LCEA、Tönnis、FEAR 指数、股骨版本。',
+        '关键教训二：女性 + 全身松弛 + 盂唇前方撕裂 → 高度警惕发育不良。单独关节镜处理会失败甚至加速退变。',
+        '关键教训三：FEAR 指数（Wyatt 2017）是发育不良患者稳定性的重要预测指标，值得在每位年轻盂唇撕裂患者中测量。'
+      ]
+    },
+    controversies: [
+      {
+        topic: '非手术治疗能否让盂唇"愈合"',
+        current: '理论上盂唇血供仅外 1/3，"愈合"可能性有限；但部分观察性研究显示 6-12 月保守 MRI 信号可降低。',
+        frontier: '2024 AJSM 前瞻性队列显示结构化 PT 6 个月后 40% 患者 PROs 达 MCID 无需手术；但哪些亚型受益仍未可靠预测。'
+      },
+      {
+        topic: 'PRP / BMAC 在盂唇撕裂的角色',
+        current: '理论有吸引力，临床证据仅限于小样本。',
+        frontier: '2025 JAMA Network Open 小样本 RCT（n=80）显示 PRP + PT 12 个月 PROs 优于单纯 PT，但未与手术比较；机制不清（症状缓解 vs 组织修复）。'
+      },
+      {
+        topic: '盂唇囊肿（paralabral cyst）的处理',
+        current: '多数为盂唇撕裂的继发现象；单纯囊肿抽吸无效。',
+        frontier: '处理原发撕裂通常使囊肿自行消退，但少数因囊肿压迫股神经者需同期减压。'
+      },
+      {
+        topic: '运动员 RTS 标准',
+        current: '术后 4-6 月为一般建议，但缺乏功能性定量标准。',
+        frontier: '等速肌力、单腿跳测试、髋特异性 Y-balance 的标准化成为热点；2024 BJSM 发表 hip RTS consensus 建议多维评估。'
+      }
+    ]
+  },
+
+  // ==================================================
+  // CARTILAGE — Chondral Lesion
+  // ==================================================
+  cartilage: {
+    redFlags: [
+      { flag: '突发剧痛 + 关节交锁 + 外伤后', action: '关节内游离体可能 → CT 或急诊关节镜' },
+      { flag: '大面积软骨下骨水肿 + 年轻患者 + 无 FAI 背景', action: '警惕一过性骨髓水肿综合征、早期 ONFH、或应力反应' },
+      { flag: '软骨下塌陷 (collapse) 影像征象', action: 'ONFH Ficat III 期或 SIF（软骨下不全骨折）→ 保守保留策略窗口关闭' }
+    ],
+    evidenceDetails: {
+      'III. 关节镜软骨手术': {
+        trials: [
+          {
+            name: 'Karthikeyan / Field 髋微骨折系统综述 (Arthroscopy 2023)',
+            n: '汇总 14 项研究 ~650 例',
+            followUp: '2-5 y',
+            effect: '2 年 PROs 改善明显但 5 年衰减；缺损 < 2 cm² 者预后最佳',
+            fragility: 'N/A（无 RCT）',
+            exclusion: '双极病变、Tönnis ≥ 2、发育不良未纠正',
+            note: '髋微骨折证据远弱于膝；髋软骨更薄、血供更差、应力更集中'
+          },
+          {
+            name: 'AMIC 髋关节 (Fontana 2021)',
+            n: 128,
+            followUp: '5 y',
+            effect: 'mHHS 从 48 → 80，维持稳定；优于同期微骨折',
+            fragility: 'N/A（病例对照）',
+            exclusion: '全层缺损 > 4 cm²、双极病变',
+            note: 'AMIC 可能是髋关节中等面积缺损的最佳现有方案，但随机对照数据仍缺失'
+          }
+        ],
+        keyPoint: '髋软骨修复的所有技术都在膝关节数据外推——髋软骨独特的负荷模式（旋转 + 剪切 + 高点负荷）使外推可信度存疑。'
+      }
+    },
+    typicalCase: {
+      title: '"FAI 术后仍痛"的第二考虑——被忽略的软骨病变',
+      vignette: '38 岁男性，2 年前外院因 FAI 行髋镜 cam 成形 + 盂唇修补，术后缓解 8 月后症状复发并进行性加重。',
+      examination: 'FADIR 阳性；Scour 诱发深部卡顿感；内旋受限，但骨性已纠正（复查 α 角 48°）。',
+      imaging: 'MRA 见前上象限 2 cm² 全层软骨缺损 + 软骨下骨水肿； dGEMRIC 显示对侧软骨相对健康区 GAG 含量降低（提示整体软骨质量下降）。',
+      decision: '翻修关节镜行 AMIC（微骨折 + 胶原膜）；同期确认 cam 已无残留。强调术后 6-8 周非负重 + 持续 CPM。',
+      outcome: '术后 12 月 mHHS 从术前 52 升至 78，但已告知患者未来 10 年内 30-50% 可能需要 THA。',
+      reflection: [
+        '关键教训一："FAI 术后仍痛" 的鉴别不是"是否需要翻修骨成形"，而是要分层：残留骨畸形 / 软骨病变进展 / 盂唇修补失败 / 粘连 / 盆腔原因。',
+        '关键教训二：软骨下骨水肿是预后的最强影像标志物，比软骨本身信号更重要。',
+        '关键教训三：诚实告知患者软骨手术的长期不确定性——这不是失败，是器官水平的负荷平衡问题。'
+      ]
+    },
+    controversies: [
+      {
+        topic: '髋关节 PRP / 再生疗法的循证地位',
+        current: '髋 OA 的 PRP/HA RCT 数据相比膝关节稀少且质量低。',
+        frontier: '2024 系统综述（Migliorini et al. JOT）提示 PRP 对早期软骨病变短期（6 月）疼痛缓解存在，但长期结构修饰作用无证据；外泌体、BMAC 处于临床前 I-II 期。'
+      },
+      {
+        topic: '一过性骨髓水肿综合征 (TOH) vs 早期 ONFH vs SIF',
+        current: '三者早期影像重叠，鉴别错误导致管理完全不同（TOH 保守、ONFH 可能需早期核心减压、SIF 需保护负荷）。',
+        frontier: '定量 MRI（水脂分数、T1 mapping）在鉴别中的价值为研究热点；危险因素评分（年龄、性别、激素史）结合影像的临床预测模型在开发中。'
+      },
+      {
+        topic: '细胞治疗（BMAC、脂肪干细胞）在髋软骨',
+        current: '在临床前和早期临床研究中。',
+        frontier: 'BMAC + 微骨折联合 vs 单纯微骨折的多中心 RCT 在进行；适应证人群（年龄、缺损大小、整体关节状态）的分层标准化是关键挑战。'
+      }
+    ]
+  },
+
+  // ==================================================
+  // LIGAMENTUM TERES — Round Ligament Injury
+  // ==================================================
+  ligtres: {
+    redFlags: [
+      { flag: '急性髋脱位/半脱位后不能完全复位感 + 机械症状', action: '圆韧带断裂合并其他关节内结构损伤可能 → MRI + 关节镜评估' },
+      { flag: '多方向不稳（前后 + 旋转）体征', action: '可能为全身关节松弛或 EDS → 遗传评估 + 避免单纯切除清理' }
+    ],
+    evidenceDetails: {
+      'II. 关节镜清理': {
+        trials: [
+          {
+            name: 'Botser et al. Arthroscopy 2011 + 后续队列',
+            n: '单中心队列 284 例关节镜中见圆韧带病变',
+            followUp: '2 y',
+            effect: '清理后 mHHS 平均 +20 分；部分撕裂预后优于完全撕裂',
+            fragility: 'N/A（观察性）',
+            exclusion: '未报告',
+            note: '此类研究最大局限：难以分离"清理圆韧带"的独立效应与同期 FAI/盂唇处理的效应'
+          }
+        ],
+        keyPoint: '圆韧带病变极少独立存在。"清理后改善"不一定源于清理本身。临床试图证明其独立作用的设计困难。'
+      }
+    },
+    typicalCase: {
+      title: '"查无实据"的顽固性髋痛——圆韧带完全撕裂',
+      vignette: '19 岁女大学生足球运动员，一次单膝着地扭转外伤后急诊复位了一次半脱位。此后 8 月持续深部髋痛 + 打软感 + 运动中不敢全力踢球。多次 MRI/MRA 报告"无明显异常"。',
+      examination: 'Gray 试验阳性（屈 90° + 外展 30° + 外旋抗阻内收诱发痛）；apprehension 阳性；Beighton 5/9。',
+      imaging: '3T MRA 专门重建后放射科复读 → 圆韧带中段增厚 + 信号不均。LCEA 26°（边缘正常）。',
+      decision: '关节镜探查：见圆韧带完全撕裂 + 前盂唇 2 点钟撕裂 + 轻度关节囊松弛。行清理 + 盂唇修补 + 关节囊折叠。',
+      outcome: '术后 10 月恢复竞技足球，无不稳感。',
+      reflection: [
+        '关键教训一：圆韧带损伤是"影像易漏、体征不特异"的经典组合——诊断依赖临床-外伤-体征-关节镜的整合。',
+        '关键教训二：3T 高分辨 MRA + 放射科-术者联合读片可显著提高检出率。',
+        '关键教训三：仅清理圆韧带对有不稳者不够——关节囊折叠可能是核心治疗步骤。'
+      ]
+    },
+    controversies: [
+      {
+        topic: '圆韧带重建的临床价值',
+        current: '技术存在（自体 ST/ITB），但病例少、长期随访稀缺。',
+        frontier: '重建 vs 单纯清理 + 关节囊折叠的比较证据薄弱；"谁真正需要重建"的选择标准仍在探索（可能为高水平运动员 + 客观不稳）。'
+      },
+      {
+        topic: '圆韧带撕裂的分类和影像诊断',
+        current: 'Gray 分类（完全 / 部分 / 退变）被广泛使用但观察者间一致性欠佳。',
+        frontier: '3T MRA 专用序列、AI 辅助识别在研发；标准化分级的影像-关节镜对照研究在进行。'
+      }
+    ]
+  }
+
+};
+
+// ==================================================
+// LATERAL + ANTERIOR + POSTERIOR ENHANCED
+// (to be merged with p1 and p3)
+// ==================================================
+const ENHANCED_P2 = {
+
+  // ============== GTPS ==============
+  gtps: {
+    redFlags: [
+      { flag: '夜间不起因性持续痛 + 体重下降', action: '警惕转子骨内病变（肿瘤、感染）→ MRI + 实验室' },
+      { flag: '外侧皮肤发红 + 发热 + 白细胞升高', action: '感染性转子滑囊炎 → 急诊抽液 + 培养' },
+      { flag: '急性无法外展 + 无外伤（轻伤后） + 中老年', action: '可能为臀中肌全层撕裂 → MRI 急查' },
+      { flag: 'L5 神经根分布痛 + 感觉异常', action: '腰椎源主导，不要仅诊断 GTPS → 腰椎 MRI' }
+    ],
+    evidenceDetails: {
+      'II. 结构化运动疗法': {
+        trials: [
+          {
+            name: 'LEAP (Mellor BMJ 2018)',
+            n: 204,
+            followUp: '8 w, 52 w',
+            effect: '8 w 全球改善率: 教育+运动 77% vs 类固醇 58% vs 无治疗 29%；52 w 分别 79% / 58% / 52%',
+            fragility: 'FI ≈ 7（相对较好）',
+            exclusion: '合并髋 OA、既往转子手术、Gluteal 肌腱全层撕裂',
+            note: 'GTPS 领域里程碑 RCT。教育+运动不只是"同等有效"，而是在全球改善率和复发率上均优于类固醇注射。'
+          }
+        ],
+        keyPoint: 'LEAP 彻底改变了 GTPS 的一线处理逻辑——类固醇注射从"首选"降为"某些人群的短期桥接"。'
+      },
+      'III. 注射治疗': {
+        trials: [
+          {
+            name: 'Fitzpatrick PRP vs 类固醇 (AJSM 2018)',
+            n: 80,
+            followUp: '12 w, 24 w, 2 y',
+            effect: '12 w 改善率相近；24 w 开始 PRP 优；2 y PRP 持续优于类固醇（mHHS 差 ~11 分）',
+            fragility: 'FI ≈ 3',
+            exclusion: '全层撕裂、Goutallier ≥ 2',
+            note: '样本量小但随访时间长；提示类固醇的"短期有效、长期可能有害"模式。'
+          }
+        ],
+        keyPoint: '在肌腱病（而非炎症）的框架下，类固醇的长期作用可能是负面的——每次注射加剧基质降解。'
+      },
+      'V. 手术': {
+        trials: [
+          {
+            name: '内镜 vs 开放臀肌修补系统综述 (Chandrasekaran Arthroscopy 2015)',
+            n: '汇总 ~400 例',
+            followUp: '2-5 y',
+            effect: '内镜 vs 开放 PROs 相当；内镜并发症更低',
+            fragility: 'N/A（观察性）',
+            exclusion: 'Goutallier ≥ 3（脂肪浸润重）',
+            note: '脂肪浸润的程度比撕裂大小更能预测手术失败。'
+          }
+        ],
+        keyPoint: '臀肌撕裂手术成功的真正限制因素是肌肉质量，不是肌腱可修补性。'
+      }
+    },
+    typicalCase: {
+      title: '"打了三针类固醇"的中年女性——为什么越打越痛',
+      vignette: '56 岁女性会计，外侧髋痛 18 个月。3 年内在 3 家诊所共接受 4 次"臀肌注射"，最近一次后疼痛反而加重，侧卧完全无法入睡。',
+      examination: '大转子压痛；30 秒单足站立 15 秒即引发外侧痛；FAdER 阳性；Ober 阳性；Trendelenburg 步态明显。',
+      imaging: 'MRI 显示臀中肌 anterior facet 附着处全层撕裂 3 cm + Goutallier 2 级脂肪浸润 + 滑囊增厚。',
+      decision: '既往类固醇注射是疼痛恶化的主要原因之一（肌腱基质降解 + 可能的医源性撕裂扩大）。与患者充分沟通：(1) 停止任何类固醇注射 (2) LEAP 样化结构化 PT 3 月作为基线 (3) 若 PT + PRP 无效则考虑内镜修补。',
+      outcome: 'PT + PRP 6 个月后 mHHS 从 42 升至 68，但坚持高强度力量训练仍困难，最终行内镜下臀肌修补。术后 9 月恢复日常功能。',
+      reflection: [
+        '关键教训一：GTPS 的主导病理是肌腱病而非炎症，类固醇在短期缓解的代价是长期基质恶化——反复注射是临床常见的医源性伤害。',
+        '关键教训二："多次治疗无效"本身就是一个信号，要求重新审视诊断（是否合并腰椎病、是否臀肌撕裂未诊断、是否生物力学根源未纠正）。',
+        '关键教训三：Goutallier 分级是手术决策的关键——2 级及以下修补预后好，3 级以上预后差，这个信息必须告知患者。'
+      ]
+    },
+    controversies: [
+      {
+        topic: 'PRP 在 GTPS 肌腱病中的角色',
+        current: '单中心 RCT 证据偏向 PRP 长期优于类固醇，但大样本多中心 RCT 缺乏。',
+        frontier: 'HEAL-IT 试验（多中心）招募中；leukocyte-rich vs leukocyte-poor PRP 的比较研究活跃。'
+      },
+      {
+        topic: '冲击波 (ESWT) 在 GTPS',
+        current: '多个系统综述提示中等证据，但与 PT 的比较数据薄弱。',
+        frontier: '2024 多项 RCT 比较聚焦波 vs 发散波 vs 安慰剂；剂量-效应关系尚未定论。'
+      },
+      {
+        topic: '臀肌撕裂的手术时机',
+        current: '无明确"应手术"时机；多为保守失败后手术。',
+        frontier: '影像预测手术时机的因子：Goutallier 分级、撕裂大小、是否累及股骨附着。倾向于"年轻 + 功能需求高 + 脂肪浸润未进展"者早期手术。'
+      },
+      {
+        topic: '转子囊炎这个诊断是否应彻底弃用',
+        current: '绝大多数"转子囊炎"实际是肌腱病 + 反应性囊变；单纯囊炎罕见（< 10%）。',
+        frontier: '命名标准化争议持续；"臀肌肌腱病"正逐步取代"转子囊炎"作为教学标准。'
+      }
+    ]
+  },
+
+  // ============== ITBS-LATERAL ==============
+  'itbs-lateral': {
+    redFlags: [
+      { flag: '伴剧痛 + 无法行走的弹响', action: '非良性——排除盂唇瓣状撕裂、关节内游离体或骨折' },
+      { flag: '青春期前儿童反复弹响', action: '评估发育性髋关节问题（DDH 后遗症）' }
+    ],
+    evidenceDetails: {
+      'III. 手术（罕见）': {
+        trials: [
+          {
+            name: 'Ilizaliturri 内镜 vs 开放 (Arthroscopy 2009 + 后续队列)',
+            n: '汇总 ~100 例',
+            followUp: '2-5 y',
+            effect: 'Z 成形术 85% 满意率；T 切开略低',
+            fragility: 'N/A',
+            exclusion: '无痛弹响者',
+            note: '手术证据整体为低质量；适应证应极严格。'
+          }
+        ],
+        keyPoint: '外侧弹响髋的手术应该是例外而非常规——多数患者误把"外侧弹响"和"外侧痛"并列诊断导致不必要手术。'
+      }
+    },
+    typicalCase: {
+      title: '不必要的手术——无痛弹响被转介做 Z 成形',
+      vignette: '22 岁女瑜伽教练，半年发现深蹲起立时髋外侧"咔嗒"声。无疼痛。被外院推荐内镜下 ITB Z 成形。',
+      examination: '可肉眼/肉耳确认 ITB 跨越大转子；Ober 试验阳性但无痛；Trendelenburg 阴性；大转子压痛阴性；30 秒单足站立 30 秒无痛。',
+      imaging: '动态超声证实 ITB 弹跳；MRI 无肌腱病变。',
+      decision: '明确无痛弹响 = 良性表现。详细教育 + 简单拉伸/臀肌力量训练方案。告知手术有残余症状和神经损伤风险，强烈不建议。',
+      outcome: '6 月随访患者接受了"这是正常变异"的解释，继续瑜伽教学，弹响仍在但心理负担消失。',
+      reflection: [
+        '关键教训一：外侧弹响髋的"有痛 vs 无痛"是决定是否干预的分水岭——不要把"医生能做什么"和"应不应该做"混为一谈。',
+        '关键教训二：许多患者真正需要的是诊断的确定性和对良性本质的理解，而不是干预。',
+        '关键教训三：手术指征的严格把控是运动医学医生的专业品格——这比手术技术本身更重要。'
+      ]
+    },
+    controversies: [
+      {
+        topic: '"无痛弹响"是否真正无害',
+        current: '目前认为是良性的，长期无显著后果。',
+        frontier: '少量研究提示长期反复机械刺激可能诱发继发性 GTPS，但无大样本前瞻数据支持。'
+      }
+    ]
+  },
+
+  // ============== ILIOPSOAS ==============
+  iliopsoas: {
+    redFlags: [
+      { flag: 'THA 术后新发屈髋痛 + 前方压痛', action: '假体过大/过度突出导致髂腰肌撞击 → 假体评估（CT）' },
+      { flag: '发热 + 腰痛放射前方 + 髋屈曲位减痛（psoas sign）', action: '腰大肌脓肿可能 → 急查 CT + 炎症指标' },
+      { flag: '股神经分布麻木 + 屈髋无力', action: '股神经卡压/腰大肌血肿 → MRI 排除' }
+    ],
+    evidenceDetails: {
+      'III. 手术': {
+        trials: [
+          {
+            name: 'Byrd 髋镜下髂腰肌松解队列 (AJSM 2014 + 更新)',
+            n: '队列 ~50 例原发性 / ~30 例 THA 后',
+            followUp: '2 y',
+            effect: '原发性 mHHS +24 分；THA 后相对复杂，部分需翻修假体',
+            fragility: 'N/A',
+            exclusion: '屈髋无力基础病者',
+            note: '约 10-30% 患者术后存在屈髋无力，多数可康复改善'
+          }
+        ],
+        keyPoint: '髂腰肌松解是"有代价的手术"——屈髋无力的风险需术前充分沟通，对运动员尤其慎重。'
+      }
+    },
+    typicalCase: {
+      title: 'THA 术后"髋仍痛"的诊断追查',
+      vignette: '62 岁男性 THA 术后 10 月，前方腹股沟屈髋痛，上下车、起身明显，无感染表现。',
+      examination: '切口愈合良好；抗阻屈髋痛（特别是坐位 SLR）；髋关节 ROM 正常；Stinchfield 阳性。',
+      imaging: 'CT 显示髋臼杯前缘较骨性缘突出 8mm，与屈髋时髂腰肌腱走行区直接接触。动态超声证实屈髋时髂腰肌腱在杯缘摩擦。',
+      decision: '诊断 THA 后髂腰肌撞击。与关节外科会诊：(1) 髋臼杯翻修（根本解决）vs (2) 髂腰肌腱松解（症状解决但假体仍异常）。患者选择注射 + PT 尝试，6 月后选择腱松解。',
+      outcome: '松解术后 6 月前方痛解除，屈髋力量达对侧 85%，可正常生活。',
+      reflection: [
+        '关键教训一：THA 术后"髋仍痛"是标准鉴别诊断列表——髂腰肌撞击在前方痛中占 15-30%。',
+        '关键教训二：髂腰肌松解是症状解决但不是根源解决——假体位置异常会继续作用于其他结构。',
+        '关键教训三：与关节外科的协作决策对这类患者至关重要。'
+      ]
+    },
+    controversies: [
+      {
+        topic: '髂腰肌松解后的功能损失',
+        current: '大部分研究报告早期屈髋无力但 6-12 个月改善，但运动员层面的数据缺乏。',
+        frontier: '同位素肌电图和 MRI 肌肉体积变化研究表明"部分松解"比"完全切断"功能损失小；"部分松解"技术标准化是热点。'
+      },
+      {
+        topic: '内侧弹响的"处理 vs 观察"阈值',
+        current: '无痛弹响不需要处理；但有痛界限模糊。',
+        frontier: '功能性干扰的量化（运动员竞技能力损失 vs 日常功能损失）成为决策新工具。'
+      }
+    ]
+  },
+
+  // ============== RECTUS ==============
+  rectus: {
+    redFlags: [
+      { flag: '青少年 AIIS 撕脱 + 显著移位 (> 2 cm)', action: '可能影响长期功能 → 考虑早期固定' },
+      { flag: '急性剧痛 + 巨大血肿 + 股神经分布麻木', action: '排除股神经血肿压迫 → MRI 急查' },
+      { flag: '反复同侧股直肌拉伤 + 未能恢复运动', action: '警惕结构性问题（深层撕裂未识别、离心力量不足、腰椎-骨盆稳定性问题）' }
+    ],
+    evidenceDetails: {
+      'III. 手术': {
+        trials: [
+          {
+            name: 'Gamradt et al. 职业足球运动员股直肌撕脱手术 (AJSM 2009 + 后续)',
+            n: '小病例系列 ~30',
+            followUp: '2-5 y',
+            effect: '100% 返场职业足球，平均 6-9 月',
+            fragility: 'N/A',
+            exclusion: '慢性部分撕裂、年龄 > 40',
+            note: '适用于急性完全撕脱 + 高水平运动员的证据是合理的，但非精英级证据'
+          }
+        ],
+        keyPoint: '股直肌完全撕脱的手术证据主要来自职业运动员的病例系列；大多数患者（业余或非完全撕脱）保守治疗效果更好。'
+      }
+    },
+    typicalCase: {
+      title: '反复同侧拉伤——未识别的腰椎-骨盆-髋动力链问题',
+      vignette: '26 岁男足球运动员，同侧股直肌近端反复拉伤 3 次 / 18 月，每次休息康复后复发加重。',
+      examination: 'AIIS 压痛；Thomas 位股直肌紧张；FABER 轻度阳性；**单腿臀桥不对称**（患侧显著弱）；Trendelenburg 步态隐性；腰椎前屈 ROM 减少。',
+      imaging: 'MRI 近端股直肌 2 级轻度慢性改变，无急性撕裂；骨盆 AP 位见骨盆前倾；腰椎 MRI 轻度 L5/S1 退变。',
+      decision: '诊断不是"股直肌拉伤"，而是"腰椎-骨盆-髋动力链失衡导致股直肌反复过载"。康复方案重点：(1) 骨盆控制 / 臀肌 (2) 腰椎稳定性 (3) 离心训练 (4) 运动专项生物力学重建。全程 16 周。',
+      outcome: '16 周后重返足球，随访 2 年未复发。',
+      reflection: [
+        '关键教训一：反复拉伤在运动医学中几乎总是系统性问题，不是局部问题。',
+        '关键教训二：肌肉拉伤的康复失败往往不是"休息不够"，而是"没处理力学根源"。',
+        '关键教训三：Copenhagen 和 Nordic 训练在近端腘绳肌 / 内收肌已有证据，但股直肌特异性的离心训练方案仍在演进。'
+      ]
+    },
+    controversies: [
+      {
+        topic: 'PRP 在急性肌肉拉伤的角色',
+        current: '多项 RCT（Reurink NEJM 2014 等）显示 PRP 对急性腘绳肌拉伤无优势；股直肌数据更少。',
+        frontier: '最新 meta 分析对"leukocyte-poor PRP"有较积极信号；但整体证据未支持常规使用。'
+      },
+      {
+        topic: '回归运动的客观标准',
+        current: '时间 + 主观"准备好"仍是多数标准。',
+        frontier: '等速肌力、功能跳跃测试、运动专项模拟的组合标准（Askling H-test 等）在精英运动中已用。复发率降低数据开始出现。'
+      }
+    ]
+  },
+
+  // ============== SPORTS-HERNIA ==============
+  'sports-hernia': {
+    redFlags: [
+      { flag: '严重腹壁压痛 + 可触及包块 + Valsalva 时显著', action: '真性疝而非 athletic pubalgia → 普外科' },
+      { flag: '睾丸牵涉痛 + 腹股沟痛 + 新发', action: '睾丸病变排除（扭转、肿瘤） → 泌尿 + 超声' },
+      { flag: '腹股沟 + 耻骨区红肿 + 发热', action: '骨髓炎 / 脓肿可能 → MRI + 实验室' }
+    ],
+    evidenceDetails: {
+      'III. 手术': {
+        trials: [
+          {
+            name: 'Paajanen RCT 手术 vs 保守 (Surgery 2011)',
+            n: 60,
+            followUp: '12 mo',
+            effect: '手术组 return to sport 90% vs 保守 27%',
+            fragility: 'FI ≈ 4',
+            exclusion: '合并 FAI 未纠正、多结构慢性',
+            note: '单中心 RCT，手术技术为 Lichtenstein mesh；现代"meshless"修补的 RCT 数据缺乏'
+          },
+          {
+            name: 'Meyers 系列（JBJS 2008 + 后续）',
+            n: '>5000 手术',
+            followUp: '多年',
+            effect: '95% 返赛率',
+            fragility: 'N/A（单中心大系列）',
+            exclusion: 'FAI 未同期处理者复发高',
+            note: '适合高水平运动员，但报告偏倚风险不可忽视'
+          }
+        ],
+        keyPoint: '运动性疝手术的成功高度依赖正确患者筛选 + 同期处理合并 FAI。"单独腹股沟处理而忽视髋"是失败的首要原因。'
+      }
+    },
+    typicalCase: {
+      title: '"运动性疝"和 FAI 的双病共存',
+      vignette: '29 岁男足球运动员，9 个月腹股沟痛，急停急转最甚。外院尝试"运动性疝修补术"，术后 3 月完全无改善。',
+      examination: '内收肌起点压痛 + squeeze 阳性；FADIR 阳性再现腹股沟痛；Stinchfield 阳性；腹直肌抗阻无痛（此前的手术区已愈）。',
+      imaging: 'MRI 见 α 角 62° cam 畸形 + 前上盂唇撕裂 + 内收肌起点轻度改变；骨盆 MRI 腹股沟后壁部分薄弱（但已手术）。',
+      decision: '诊断：FAI + 盂唇撕裂 + 内收肌病（次要）。前次"单独腹股沟手术"是对 Doha 框架的误用。方案：髋镜 cam 成形 + 盂唇修补 + 内收肌结构化康复。',
+      outcome: '术后 9 月恢复竞技足球。',
+      reflection: [
+        '关键教训一：Doha agreement 后"运动性疝"不再被视为独立诊断——"Hip-Groin Pain Complex" 强调多来源分析。',
+        '关键教训二：FAI 是腹股沟痛的最常见深部原因，必须在任何"腹股沟手术"之前系统评估。',
+        '关键教训三：跨学科协作（运动医学 + 普外科 + 物理治疗师）是这类患者的标准。'
+      ]
+    },
+    controversies: [
+      {
+        topic: 'Meshless 修补 vs 传统 Lichtenstein',
+        current: '许多精英中心现采用 Meshless 技术（Meyers, Muschaweck）。',
+        frontier: '两者的头对头 RCT 数据缺乏；返赛时间和复发率的系统比较在进行。'
+      },
+      {
+        topic: '诊断性注射在 Doha 框架中的位置',
+        current: '针对不同靶点的序贯注射用于定位疼痛源。',
+        frontier: 'MRI 指标 + 注射响应的组合诊断标准化仍在发展；AI 辅助影像分析开始出现。'
+      },
+      {
+        topic: 'FAI 手术 vs 腹股沟手术的顺序',
+        current: '多数中心倾向 FAI 优先（若显著），但部分倾向"症状主导侧优先"。',
+        frontier: '正在形成"FAI 重度 + 腹股沟轻 → 先 FAI"、"FAI 轻 + 腹股沟症状主导 → 先腹股沟 + 保守 FAI"的分层决策。'
+      }
+    ]
+  },
+
+  // ============== DEEP-GLUTEAL ==============
+  'deep-gluteal': {
+    redFlags: [
+      { flag: '进行性下肢无力 + 鞍区感觉减退 + 膀胱功能障碍', action: '马尾综合征可能 → 急诊 MRI + 神经外科' },
+      { flag: '新发无诱因深臀痛 + 体重下降 + 夜间痛', action: '盆腔或骶骨肿瘤排除 → MRI + PET/CT' },
+      { flag: '妊娠期新发 + 坐位持续痛', action: '考虑骶髂功能障碍 / 骨盆带综合征' },
+      { flag: '既往脊柱手术史 + 新发深臀痛', action: '排除手术相关神经瘤 / 蛛网膜囊肿' }
+    ],
+    evidenceDetails: {
+      'III. 内镜 decompression': {
+        trials: [
+          {
+            name: 'Martin et al. 内镜坐骨神经减压系列 (Arthroscopy 2011 + 更新)',
+            n: '~35-100 例各队列',
+            followUp: '1-3 y',
+            effect: '75-85% 患者显著疼痛缓解；mHHS 平均改善 30 分',
+            fragility: 'N/A',
+            exclusion: '合并腰椎病变未解决、无影像学证据',
+            note: '观察性证据；选择偏倚强；适用于多维度严格筛选者'
+          }
+        ],
+        keyPoint: '深臀综合征的诊断本身是争议中心——内镜"见到"病变不一定等于"病变导致症状"。"诊断 > 手术"是这个领域的格言。'
+      }
+    },
+    typicalCase: {
+      title: '"腰椎间盘突出手术失败"后的深臀综合征',
+      vignette: '47 岁男性 IT 工程师，久坐 12+ 小时/日。左臀深部 + 大腿后侧放射痛 3 年。腰椎 MRI 见 L5/S1 椎间盘轻中度突出，外院腰椎手术后 6 月症状未改善。',
+      examination: '梨状肌区深压痛；FAIR 阳性；Active Piriformis 阳性；Seated Stretch 阳性；SLR 70° 阳性但相对轻；腰椎无压痛、ROM 正常。',
+      imaging: 'MR 神经成像（MRN）见左梨状肌不对称肥大 + 坐骨神经水肿 + 通过梨状肌下孔处信号改变。',
+      decision: '诊断：深臀综合征（梨状肌型）。关键是"腰椎 MRI 有突出 ≠ 症状来源于腰椎"。CT 引导下梨状肌 + 坐骨神经周围局麻 + 类固醇注射作为诊断性 + 治疗性。',
+      outcome: '注射后 2 小时症状缓解 70%，持续 4 周后部分复发。启动结构化 PT（坐姿改善 + 神经松动 + 髋外旋肌拉伸 + 臀肌重新训练）。16 周后症状缓解 85%，不需手术。',
+      reflection: [
+        '关键教训一："影像阳性"不等于"症状来源"——腰椎 MRI 无症状人群突出率 > 30%。诊断必须由体征主导，影像佐证。',
+        '关键教训二：诊断性注射在这个领域比影像更有决定性——它直接测试"这个结构是否产生症状"。',
+        '关键教训三：避免不可逆手术之前，充分的保守 + 针对性注射几乎总是对的。'
+      ]
+    },
+    controversies: [
+      {
+        topic: '"梨状肌综合征"作为独立实体 vs 更广的"深臀综合征"',
+        current: '2015 年后"深臀综合征"取代"梨状肌综合征"作为诊断框架——坐骨神经可被至少 6 种结构压迫。',
+        frontier: 'MRN 技术改进使细分更精确；对应的手术路径不同（梨状肌切除 vs 孖肌-闭孔肌清理 vs 纤维束释放）。'
+      },
+      {
+        topic: 'MRN 的可重复性和标准化',
+        current: '非标准化，高度依赖影像中心经验。',
+        frontier: '专用序列、AI 辅助、多中心共识标准化正在推进。'
+      },
+      {
+        topic: '内镜坐骨神经减压的长期价值',
+        current: '短中期 PROs 改善明显，但 5-10 年数据极少。',
+        frontier: '并发症（神经损伤、复发粘连）的真实发生率可能被低估；跨中心注册数据是急需的。'
+      }
+    ]
+  },
+
+  // ============== PROXIMAL-HAM ==============
+  'proximal-ham': {
+    redFlags: [
+      { flag: '急性完全撕脱 + 坐骨结节"空虚" + 大腿后瘀斑', action: '必须 MRI，回缩 > 2 cm 考虑 4 周内手术；延迟手术难度几何级增加' },
+      { flag: '进行性深臀痛 + 骨性 tender 点 + 年龄 > 50 + 无外伤', action: '排除骨盆应力骨折 / 耻骨坐骨支骨折 / 肿瘤' },
+      { flag: '坐骨神经分布放射痛（不仅臀部）', action: '急性撕脱常伴神经刺激；慢性瘢痕可压迫坐骨神经 → MRN' }
+    ],
+    evidenceDetails: {
+      'III. 急性撕脱手术': {
+        trials: [
+          {
+            name: 'Sarimo / Lempainen 队列 + Birmingham 队列汇总',
+            n: '累计 ~500+ 手术',
+            followUp: '2-10 y',
+            effect: '< 4 周手术：90%+ 返运动；延迟手术（> 6 月）：显著下降到 60-75%',
+            fragility: 'N/A（队列）',
+            exclusion: '多年慢性、严重回缩伴坐骨神经瘢痕化',
+            note: '手术时机是预后最重要的预测因素——"延迟的代价是几何级的"'
+          }
+        ],
+        keyPoint: '急性近端腘绳肌完全撕脱 + 回缩是少数"不要犹豫手术"的运动医学情境。'
+      },
+      'I. 慢性肌腱病保守': {
+        trials: [
+          {
+            name: 'Cacchio 渐进性重负荷 RCT (AJSM 2011)',
+            n: 40,
+            followUp: '12 w, 6 mo',
+            effect: '重负荷组 VISA-H 改善显著优于常规拉伸',
+            fragility: 'FI ≈ 2',
+            exclusion: '急性 / 完全撕裂',
+            note: '小样本但影响力大；提示肌腱病的"轻度刺激不够、需要足够负荷"原则'
+          }
+        ],
+        keyPoint: '慢性肌腱病的保守失败多数源于"负荷不足"——运动医学 PT 的剂量应该达到可控疼痛阈值。'
+      }
+    },
+    typicalCase: {
+      title: '"延迟 8 月的撕脱"——为什么手术时机不可妥协',
+      vignette: '38 岁男性水上滑水爱好者，8 月前滑水急停时感后大腿剧痛 + 撕裂感，当时就诊报"腘绳肌拉伤"建议休息。8 月后仍不能跑步、不能坐硬椅、大腿后萎缩明显。',
+      examination: '坐骨结节空虚；Puranen-Orava 阳性；Bent-knee stretch 阳性；抗阻屈膝力量对侧 50%；坐位明显不适（坐骨神经可能受瘢痕牵拉）。',
+      imaging: 'MRI 显示近端腘绳肌完全撕脱 + 回缩 6 cm + 瘢痕组织 + 坐骨神经受瘢痕包绕。',
+      decision: '延迟撕脱手术。术前详细沟通：(1) 撕裂端游离非常困难 (2) 坐骨神经需松解 (3) 可能需 ITB / 阔筋膜张肌 / 异体移植桥接 (4) 预后较 < 4 周手术显著差。',
+      outcome: '手术顺利游离撕裂端 + 神经松解，术后 12 月屈膝力量恢复对侧 75%，可骑车、游泳、慢跑，但急转加速跑仍不能达伤前水平。',
+      reflection: [
+        '关键教训一：急性完全撕脱 + 回缩是"24 小时内必须 MRI、4 周内必须手术"的标准场景。"腘绳肌拉伤"是最容易误导的标签。',
+        '关键教训二：最初的接诊医生决定了患者后半生的功能水平——这是临床责任的极限表现。',
+        '关键教训三：对所有急性后大腿"剧痛 + 撕裂感 + 瘀斑"患者，都应该在 1 周内做 MRI 而不是"先观察"。'
+      ]
+    },
+    controversies: [
+      {
+        topic: '2 头 vs 3 头撕脱手术指征的差异',
+        current: '3 头撕脱手术指征更明确（回缩大 + 神经刺激）；2 头部分撕裂争议多。',
+        frontier: 'MRI 精确测量 + 回缩阈值的标准化在发展；EST（elite sports threshold）数据开始形成。'
+      },
+      {
+        topic: 'PRP 在慢性近端腘绳肌肌腱病',
+        current: '小样本 RCT 提示短期效益，长期不确定。',
+        frontier: '2024 多中心 RCT 在招募；与结构化重负荷训练的比较是关键问题。'
+      },
+      {
+        topic: '内镜处理近端腘绳肌病变',
+        current: '部分中心开展内镜下清理 / 部分修补。',
+        frontier: '开放 vs 内镜的比较数据尚浅；适应证选择（部分撕裂类型）在摸索中。'
+      }
+    ]
+  },
+
+  // ============== ISCHIOFEMORAL ==============
+  ischiofemoral: {
+    redFlags: [
+      { flag: '双侧深臀痛 + 骨盆创伤史', action: '排除骨盆骨折后遗 / 坐骨异位骨化 → CT' },
+      { flag: '儿童或青少年深后痛 + 髋外展受限', action: 'DDH 后遗 / 股骨后倾 / Perthes 后遗可能 → 骨科发育评估' }
+    ],
+    evidenceDetails: {
+      'II. 注射': {
+        trials: [
+          {
+            name: 'Backer et al. 股方肌注射队列 (Radiol 2014 + 后续)',
+            n: '~40 例',
+            followUp: '6-12 mo',
+            effect: '70% 显著缓解 4-6 月',
+            fragility: 'N/A',
+            exclusion: '非典型影像',
+            note: '证据仍弱；诊断性注射的价值大于治疗性'
+          }
+        ],
+        keyPoint: 'IFI 的诊断确定性本身就是争议——空间测量阈值在不同研究中差异大（IFS 15-22mm 各不同）。'
+      }
+    },
+    typicalCase: {
+      title: '女性长步长跑者的"坐骨-股骨空间问题"',
+      vignette: '42 岁女性马拉松爱好者，深臀痛 14 月。跑步后加重，大步长步行特别触发，坐硬椅尚可。',
+      examination: '坐骨结节与小转子间深压痛；Long-stride walking 阳性；IFI 试验阳性；FABER 轻阳性；Puranen-Orava 阴性。',
+      imaging: '轴位 MRI：股方肌 T2 高信号 + IFS 12 mm（< 15 mm 阈值）+ QFS 7 mm；骨盆解剖正常。',
+      decision: '诊断 IFI。方案：(1) 步长调整（缩短 10-15%）(2) 骨盆稳定 + 核心训练 (3) 髋屈肌柔韧性 (4) CT 引导股方肌类固醇注射作为诊断确认 + 治疗。',
+      outcome: '注射后 3 月症状缓解 70%，步长调整持续坚持后维持。',
+      reflection: [
+        '关键教训一：IFI 在过去 10 年才被广泛认识，多数"顽固深臀痛"可能是被忽视的 IFI。',
+        '关键教训二：步长和跑步技术是可改变因素——不要仅依赖注射/手术。',
+        '关键教训三：IFS/QFS 测量的位置标准化是诊断可靠性的关键，需要影像科医师专门训练。'
+      ]
+    },
+    controversies: [
+      {
+        topic: 'IFI 的空间测量标准',
+        current: 'IFS < 15-17 mm、QFS < 8-10 mm 在不同文献中阈值不同。',
+        frontier: '标准化协议（特定体位 + 特定层面）的多中心共识在推进；动态 MRI（伸髋位 + 中立位）显示差异的研究活跃。'
+      },
+      {
+        topic: '保守 vs 手术的阈值',
+        current: '手术极少；多数患者保守治疗有效。',
+        frontier: '小转子切除在顽固病例中的价值尚有争议；围手术期并发症（髂腰肌损伤）是关键顾虑。'
+      }
+    ]
+  }
+
+};
+
+// ==================================================
+// MEDIAL + BONY + NEURAL ENHANCED
+// ==================================================
+const ENHANCED_P3 = {
+
+  // ============== ADDUCTOR ==============
+  adductor: {
+    redFlags: [
+      { flag: '急性剧痛 + 可扪及缺损 + 巨大瘀斑', action: '内收肌完全撕脱 → MRI + 考虑一期修补（职业运动员）' },
+      { flag: '双侧急性内收肌腹股沟痛 + 发热', action: '排除化脓性耻骨炎或耻骨骨髓炎 → MRI + 实验室' },
+      { flag: '单侧进行性腹股沟肿胀 + 夜间痛', action: '警惕软组织肿瘤（脂肪肉瘤偏好此区域） → MRI 平扫+增强' }
+    ],
+    evidenceDetails: {
+      'I. 结构化康复': {
+        trials: [
+          {
+            name: 'Hölmich 主动训练 RCT (Lancet 1999)',
+            n: 68,
+            followUp: '4 mo',
+            effect: '主动训练组 return to sport 79% vs 被动 (拉伸/理疗) 14%',
+            fragility: 'FI ≈ 5',
+            exclusion: '急性 < 2 月、真性疝、FAI 未评估',
+            note: '运动医学里"被动治疗 vs 主动训练"的里程碑 RCT。重塑了整个领域。'
+          },
+          {
+            name: 'Copenhagen Adduction 预防 (Harøy BJSM 2019)',
+            n: 660,
+            followUp: '1 season',
+            effect: '内收肌相关损伤发生率降低 41%',
+            fragility: 'FI ≈ 6',
+            exclusion: '当前伤病',
+            note: '这是预防层面的证据——将训练从"治疗"扩展到"一级预防"。'
+          }
+        ],
+        keyPoint: 'Copenhagen adduction 现在是欧洲足球青训的标准预防方案。中国俱乐部和学校体育尚未普遍采用，这是一个显著落差。'
+      }
+    },
+    typicalCase: {
+      title: '"反复内收肌拉伤"的跨学科视角',
+      vignette: '24 岁男足球中场，一个赛季内 4 次同侧内收肌拉伤。每次急性期休息 + 按摩后返场过快。',
+      examination: '内收长肌起点压痛 + squeeze 阳性 + Copenhagen 离心力量较对侧 60%；骨盆 ROM 检查：髋内旋受限 15°（不对称）+ 腰椎前屈轻度受限。',
+      imaging: 'MRI 内收长肌起点 2 级慢性改变 + 无急性撕裂；骨盆 AP 位见髋关节 α 角 58°（轻度 cam 形态）。',
+      decision: '诊断不是"内收肌拉伤"，是"内收肌-髋动力链失衡 + 潜在 FAI 背景 + 运动专项离心力量不足"。16 周综合方案：Copenhagen + 动态核心 + 内旋训练 + 回归运动 criteria-based（包括 Copenhagen 力量、5-10-5 测试、单腿跳）。',
+      outcome: '16 周后 return to play，次赛季 0 次复发。',
+      reflection: [
+        '关键教训一：反复内收肌拉伤不是"内收肌问题"，而是"内收肌过载问题"——过载的根源可能在髋、核心、腰椎、对侧。',
+        '关键教训二：Copenhagen 力量测试是客观指标，比"感觉好了"更可靠。',
+        '关键教训三：离心负荷训练是肌腱病和肌肉拉伤的共同康复基石——这个原则跨越多个运动医学诊断。'
+      ]
+    },
+    controversies: [
+      {
+        topic: '内收肌 tenotomy 的适应证',
+        current: '高水平运动员顽固病例中使用，但开放 vs 内镜、完全 vs 部分切腱争议。',
+        frontier: '"部分 tenotomy"（保留深层）在降低长期无力方面优于"完全 tenotomy"的证据正在积累。'
+      },
+      {
+        topic: 'Doha 框架的 5 个亚型重叠',
+        current: '实际临床中多数患者多亚型共存（例如内收肌 + 髋 + 腹股沟型）。',
+        frontier: 'AI 辅助诊断 / 生物标志物分层 / 病因性治疗的个体化成为方向。'
+      }
+    ]
+  },
+
+  // ============== OSTEITIS-PUBIS ==============
+  'osteitis-pubis': {
+    redFlags: [
+      { flag: '发热 + 局部红肿 + 实验室炎症指标高', action: '化脓性耻骨骨髓炎（罕见但严重）→ MRI + 实验室 + 可能活检' },
+      { flag: '分娩后持续耻骨痛 + 不对称步态', action: '妊娠相关耻骨联合分离 / 产后功能障碍 → 骨盆 MRI' },
+      { flag: '老年 + 非外伤性耻骨痛 + 骨质疏松', action: '耻骨支应力骨折或不全骨折 → 全身骨扫描 / MRI' }
+    ],
+    evidenceDetails: {
+      'I. 综合康复': {
+        trials: [
+          {
+            name: 'Weir et al. 系统综述 (BJSM 2011)',
+            n: '综合 17 项研究',
+            followUp: '不一',
+            effect: '综合康复（内收肌 + 核心 + 骨盆带）的长期预后好于单纯休息或注射',
+            fragility: 'N/A',
+            exclusion: '真性感染、骨折',
+            note: '这是领域的标准综述；后续研究基本确认了"康复 > 注射"的整体趋势'
+          }
+        ],
+        keyPoint: '耻骨炎是一个临床命名更像描述而不像诊断——它描述的是一种影像 + 症状组合，治疗应聚焦根源（内收肌过载、核心不足、运动模式）。'
+      }
+    },
+    typicalCase: {
+      title: '职业冰球运动员的慢性耻骨炎',
+      vignette: '31 岁男职业冰球运动员，双侧耻骨联合区 18 月痛。急停、变向、射门加重。核心训练坚持但症状反复。',
+      examination: '耻骨联合中线压痛；双侧内收肌起点压痛；squeeze 阳性；抗阻仰卧起坐诱发；Flamingo 位显示耻骨联合不稳（> 2mm 纵向位移）。',
+      imaging: 'MRI 耻骨联合骨髓水肿 + 双侧内收肌起点病变；Flamingo 位阳性；评估 FAI：α 角 55°（边缘）。',
+      decision: '诊断：慢性耻骨炎 + 耻骨联合不稳 + 双侧内收肌病。方案分阶段：(1) 3 月综合康复（骨盆带稳定 + Copenhagen 力量）(2) 影像引导注射（双侧内收肌 + 耻骨联合）(3) 若无效考虑耻骨联合融合（极罕见）。',
+      outcome: '6 月综合治疗后 VAS 从 7 降到 2，可恢复训练但不能无症状参赛；决定引退职业冰球，转为教练。',
+      reflection: [
+        '关键教训一：耻骨炎在精英接触性运动是职业终结性伤病——预期管理比"彻底治愈"更现实。',
+        '关键教训二：Flamingo 位在评估动态不稳方面是独特工具。',
+        '关键教训三：与运动员就"职业生涯时间线"的坦诚沟通是运动医生的责任——不是所有人都能回到伤前水平。'
+      ]
+    },
+    controversies: [
+      {
+        topic: '耻骨联合融合的指征',
+        current: '极罕见手术，仅用于其他一切无效 + 影像确认显著不稳。',
+        frontier: '数据太少无法形成证据；病例系列报告混合结果。'
+      },
+      {
+        topic: 'PRP 在耻骨炎',
+        current: '理论依据（促进内收肌起点愈合），临床证据薄弱。',
+        frontier: '多靶点联合注射（内收肌起点 + 耻骨联合）的 RCT 在进行。'
+      },
+      {
+        topic: '骨髓水肿与症状的不一致',
+        current: '无症状运动员中 30% MRI 可有耻骨骨髓水肿。',
+        frontier: '症状-影像-预后关系的纵向队列研究在进行；"水肿严重度 vs 位置"哪个更预后相关尚未明确。'
+      }
+    ]
+  },
+
+  // ============== FEMORAL-NECK-STRESS ==============
+  'femoral-neck-stress': {
+    redFlags: [
+      { flag: '任何 hopping 痛 + 跑者史 / 军训史', action: '必须 MRI 排除 → 绝对不能漏诊' },
+      { flag: '张力侧 (上外) 骨折线 + 任何移位征象', action: '急诊骨科会诊 → 立即 NWB + 内固定考虑' },
+      { flag: '女性运动员三联征（能量不足 / 月经紊乱 / 低骨密度）', action: '综合代谢评估 + 营养师 + 妇科介入，不仅是骨科问题' },
+      { flag: '双侧股骨颈应力骨折或多部位反复应力骨折', action: '排除代谢性骨病 / 低磷性软骨病 / 维生素 D 缺乏 / 罕见遗传代谢病' },
+      { flag: '儿童或青少年 + 无典型诱因', action: '警惕类风湿 / 白血病 / 神经母细胞瘤 / Legg-Calvé-Perthes 早期' }
+    ],
+    evidenceDetails: {
+      'II. 张力侧手术': {
+        trials: [
+          {
+            name: 'Biz / Ivkovic 等多中心回顾',
+            n: '累计 ~200 例',
+            followUp: '2-10 y',
+            effect: '早期内固定完全骨折率 < 5%；延迟手术（完全骨折后）股骨头坏死率 15-30%',
+            fragility: 'N/A（观察性）',
+            exclusion: '既往股骨头坏死',
+            note: '预防完全骨折是核心——这比"修复完全骨折"预后好几个数量级'
+          }
+        ],
+        keyPoint: '张力侧股骨颈应力骨折的早期识别 + 早期内固定，是运动医学中"识别时机几乎等于决定患者终身"的典型情境。'
+      },
+      'III. 代谢优化': {
+        trials: [
+          {
+            name: '女性运动员三联征 / RED-S 共识 (Mountjoy BJSM 2018 + 2023 更新)',
+            n: 'N/A（共识）',
+            followUp: 'N/A',
+            effect: '能量可用性 (Energy Availability) 恢复至 > 45 kcal/kg FFM/d 与月经恢复和骨密度改善相关',
+            fragility: 'N/A',
+            exclusion: 'N/A',
+            note: 'RED-S (Relative Energy Deficiency in Sport) 框架扩展了"三联征"——影响不限于骨，包括内分泌、免疫、心血管'
+          }
+        ],
+        keyPoint: '股骨颈应力骨折是全身代谢问题的骨性表达。不解决代谢根源，就是"处理症状而遗留根源"。'
+      }
+    },
+    typicalCase: {
+      title: '"没在意"的 hopping 痛——差点的张力侧完全骨折',
+      vignette: '23 岁女性军校学员，体能训练强度突增 2 月后右腹股沟痛 3 周，继续训练症状加重。自行诊所"休息 + 止痛药"，但 hopping 时剧烈痛警惕就诊。',
+      examination: 'Hopping 明确阳性 + 不能单足跳；Patrick 阳性；负重时腹股沟深痛；无明显 ROM 受限。',
+      imaging: 'MRI STIR 序列见右股骨颈**张力侧（上外）**骨髓水肿 + 部分骨折线 + 未完全化；平片阴性。',
+      decision: '<span style="color:var(--rule-out)">这是不能等待的诊断。</span>立即停止所有负重、禁止再次 hopping。骨科会诊评估内固定。与患者沟通："错过这个窗口，职业生涯和髋关节功能都可能永久改变。"同期 DEXA + 维生素 D + 月经史评估。',
+      outcome: '当日行空心钉内固定。术后 NWB 8 周 + 严格代谢纠正（Vit D 从 18 升至 45 ng/mL + 月经恢复 + 营养介入）。6 月后重返军训；未进展到完全骨折。',
+      reflection: [
+        '关键教训一：hopping test 是运动医学诊室里最具决定性意义的简单检查——阳性 = MRI，不可妥协。',
+        '关键教训二：女性运动员 + 腹股沟痛 + 训练量突增，这个组合必须在默认层面触发应力骨折排查。',
+        '关键教训三：代谢问题不是"附属诊断"，它与骨性诊断并列为核心诊断。只治骨不治代谢 = 时间炸弹。'
+      ]
+    },
+    controversies: [
+      {
+        topic: '压缩侧应力骨折的 NWB 时长',
+        current: '传统 6 周 NWB 逐渐被部分 weight bearing 质疑。',
+        frontier: 'ERAS（加速康复）概念在运动员中的应用；客观愈合标准（MRI 水肿消退 vs 骨折线愈合）的标准化在推进。'
+      },
+      {
+        topic: 'BMP / PRP / 电刺激在延迟愈合中的角色',
+        current: '数据有限，仅用于顽固病例。',
+        frontier: '骨代谢 + 局部生物刺激组合方案在研究中；"预后不良骨折"的早期识别（AI 影像分析）可能改变干预时机。'
+      },
+      {
+        topic: 'RED-S 框架的临床实施',
+        current: '指南明确，但日常临床实施不充分——尤其在中国语境下缺乏营养师体系支持。',
+        frontier: '运动医学团队内部流程化（营养筛查、月经史问卷、DEXA 阈值）的标准化建设。'
+      }
+    ]
+  },
+
+  // ============== AVULSION ==============
+  avulsion: {
+    redFlags: [
+      { flag: '移位 > 2 cm + 职业运动员', action: '保守不愈合或愈合不良风险高 → 早期固定' },
+      { flag: '多部位骨骺撕脱 / 反复不同部位撕脱', action: '评估骨骺发育 + 营养 / 激素平衡' },
+      { flag: '成人（骨骺已闭）出现"骨性撕脱"', action: '不是典型撕脱——排除骨质疏松性骨折 / 病理性骨折 / 肌腱完全撕脱' }
+    ],
+    evidenceDetails: {
+      'II. 手术': {
+        trials: [
+          {
+            name: 'Eberbach / Schiller 系统综述 (KSSTA 2017)',
+            n: '汇总 ~600 例',
+            followUp: '2-5 y',
+            effect: '移位 > 2 cm 者手术组 return to sport 100% vs 保守 80%；保守组不愈合率 ~10%',
+            fragility: 'N/A',
+            exclusion: 'ASIS / 髂嵴撕脱的小移位病例',
+            note: '坐骨结节撕脱的外科倾向最强；其他部位则更倾向保守'
+          }
+        ],
+        keyPoint: '骨盆撕脱的手术决策是"部位特异 + 移位 + 运动水平"的三维考量——不存在通用规则。'
+      }
+    },
+    typicalCase: {
+      title: '"打完比赛一瘸一拐回来的"16 岁足球队员',
+      vignette: '16 岁男足球运动员，比赛中一记大力射门后坐骨结节区剧痛 + 无法再次踢球。家长以为"肌肉拉伤"3 天后就诊。',
+      examination: '右坐骨结节压痛 + 可扪及骨性间隙；Puranen-Orava 阳性；屈膝力量减弱；臀部大片瘀斑（迟发）。',
+      imaging: '平片见右坐骨结节撕脱 + 移位 2.5 cm；MRI 确认腘绳肌共联合腱附着骨碎片 + 肌腱完整。',
+      decision: '明确撕脱 + 移位 > 2 cm + 职业追求方向（青训球员）。家属充分沟通后选择手术（螺钉 + 缝合锚钉固定）。',
+      outcome: '术后 6 周 NWB，12 周后渐进性康复。6 月返足球训练，9 月竞技比赛；力量达对侧 95%。',
+      reflection: [
+        '关键教训一：青少年"肌肉拉伤"的门诊必须做平片——几乎没有成本但可以避免错过撕脱骨折。',
+        '关键教训二：坐骨结节撕脱 + 显著移位是最倾向手术的撕脱部位之一。',
+        '关键教训三：青少年运动员的伤病决策不仅是医学问题，也是运动发展轨迹问题——充分沟通运动职业期望至关重要。'
+      ]
+    },
+    controversies: [
+      {
+        topic: '临界移位（1-2 cm）的决策',
+        current: '无明确阈值——多数因部位、患者、中心偏好决定。',
+        frontier: '前瞻队列建立更精细的移位-预后关系（例如坐骨结节 1.5 cm 与 AIIS 1.5 cm 的预后可能不同）。'
+      },
+      {
+        topic: '非愈合和异位骨化的发生率',
+        current: '保守组不愈合约 10%；异位骨化 < 5%。',
+        frontier: '影像预测不愈合风险（骨折块大小、移位方向、骨质）的研究。'
+      }
+    ]
+  },
+
+  // ============== MERALGIA ==============
+  meralgia: {
+    redFlags: [
+      { flag: '双侧感觉异常性股痛 + 发病 < 3 月', action: '排除系统性病因（糖尿病多发性神经病、系统性疾病）→ 代谢筛查' },
+      { flag: '伴运动无力（不仅感觉）', action: '非单纯 LFCN 卡压 → 腰椎 MRI + 肌电图' },
+      { flag: '无典型诱因 + 进行性加重', action: '排除腹股沟区肿块 / 盆腔肿瘤压迫 → MRI 骨盆' }
+    ],
+    evidenceDetails: {
+      'II. 神经阻滞': {
+        trials: [
+          {
+            name: 'Tumber et al. 超声引导 LFCN 阻滞队列',
+            n: '~50 例',
+            followUp: '6 mo',
+            effect: '70-80% 至少 3 月缓解；可重复注射',
+            fragility: 'N/A',
+            exclusion: '无',
+            note: '超声引导比盲法精确度高'
+          }
+        ],
+        keyPoint: '感觉异常性股痛的诊断本身在 70-90% 病例是临床的，注射提供诊断 + 治疗双重价值。'
+      }
+    },
+    typicalCase: {
+      title: '"产后腰痛"误诊 6 月的年轻母亲',
+      vignette: '32 岁女性产后 9 月，右大腿前外侧麻木 + 烧灼 6 月。外院诊断"腰椎间盘突出"保守治疗无效。',
+      examination: '外大腿 handheld size 区针刺觉减退；Tinel (ASIS 内下 1.5 cm) 阳性；肌力正常；SLR 阴性；腰椎 ROM 完全、无压痛。',
+      imaging: '腰椎 MRI 轻度 L4/5 突出但无根部压迫征象；超声见 LFCN 在腹股沟韧带下方显著增厚。',
+      decision: '诊断：产后相关 LFCN 卡压（可能与孕期紧身衣、体重增加、骨盆倾斜改变相关）。方案：诱因去除 + 超声引导 LFCN 阻滞（诊断性 + 治疗性）。',
+      outcome: '阻滞后症状完全缓解 4 月；再次复发时重复 1 次；9 月后症状消失未再复发。',
+      reflection: [
+        '关键教训一：腰椎 MRI 阳性 ≠ 症状来源——典型分布是诊断的核心。',
+        '关键教训二：非腰椎根部分布的前外侧感觉异常 + 无运动无力 = 感觉异常性股痛直到证明另有其他。',
+        '关键教训三：孕期 / 产后女性是这个诊断的高危人群，但常被归入"腰痛"大类误诊。'
+      ]
+    },
+    controversies: [
+      {
+        topic: '神经松解 vs 切断',
+        current: '松解保留感觉；切断彻底但永久麻木区。',
+        frontier: '小样本研究提示切断可能长期效果更好但代价是永久感觉丧失；患者决策偏好研究在进行。'
+      },
+      {
+        topic: '神经消融（RFA / 冷冻消融）',
+        current: '新兴选项，有限数据。',
+        frontier: '超声 / CT 引导 RFA 的中期数据（2-3 年）开始出现；有望成为"注射无效到手术"的中间选项。'
+      }
+    ]
+  }
+
+};
+
+// Merge into single ENHANCED object
+Object.assign(ENHANCED, ENHANCED_P2, ENHANCED_P3);
+
+
+
+// ============================================
+// PHYSICAL EXAM TESTS
+// ============================================
+const TESTS = [
+  { num: '01', name: 'FADIR', cn: '屈曲-内收-内旋试验', method: '仰卧位，被动屈髋90° + 内收 + 内旋，诱发腹股沟/髋前方痛为阳性。', positive: '再现患者主诉的腹股沟痛 = 阳性', stats: { sens: '88%', spec: '32%', plr: '1.3' }, for: '关节内病变筛查 · FAI · 盂唇撕裂' },
+  { num: '02', name: 'FABER / Patrick', cn: '屈曲-外展-外旋试验', method: '仰卧位，将患侧踝放对侧膝上 (4字位)，施加髋向下压力。测量膝到床距离。', positive: '腹股沟前方痛 → 髋关节内; 同侧后方痛 → 骶髂; 双侧差 &gt; 4 cm = 受限', stats: { sens: '60%', spec: '57%', plr: '1.4' }, for: '关节内 / 骶髂鉴别' },
+  { num: '03', name: 'Log Roll', cn: '滚动试验', method: '仰卧位，被动内外旋下肢，无其他动作。', positive: '诱发腹股沟痛 / ROM 明显不对称 / 活动末期痛', stats: { sens: '56%', spec: '70%', plr: '1.9' }, for: '纯关节内测试 (特异性较高)' },
+  { num: '04', name: 'Stinchfield / Resisted SLR', cn: '抗阻直腿抬高', method: '仰卧位, 抗阻 30° 屈髋抬腿。', positive: '腹股沟或前方痛', stats: { sens: '59%', spec: '32%', plr: '-' }, for: '髂腰肌 / 关节内' },
+  { num: '05', name: '30-sec Single Leg Stance', cn: '30秒单足站立', method: '患侧单足站立 30 秒，观察骨盆下沉 + 疼痛。', positive: '30秒内外侧痛 或 Trendelenburg 阳性', stats: { sens: '100%', spec: '97%', plr: '29' }, for: 'GTPS / 臀中肌功能不全' },
+  { num: '06', name: 'Resisted External Derotation (FAdER)', cn: '抗阻外旋', method: '俯卧膝屈 90°，被动内旋后抗阻外旋。', positive: '外侧大转子痛', stats: { sens: '88%', spec: '97%', plr: '30' }, for: 'GTPS · 臀中肌肌腱病' },
+  { num: '07', name: 'Ober Test', cn: 'Ober 试验', method: '侧卧患侧在上，屈膝 90°，被动外展伸髋 + 内收。正常可内收超中线。', positive: '腿不能内收至床面 = ITB 紧张', stats: { sens: '-', spec: '-', plr: '-' }, for: 'ITB / GTPS 相关' },
+  { num: '08', name: 'Puranen-Orava', cn: '近端腘绳肌拉伸', method: '站立, 髋屈 90° + 膝完全伸 + 踝背屈 (脚放高处)。', positive: '坐骨结节区疼痛', stats: { sens: '76%', spec: '82%', plr: '4.2' }, for: '近端腘绳肌肌腱病' },
+  { num: '09', name: 'Bent-knee Stretch', cn: '屈膝拉伸', method: '仰卧, 极限屈髋 + 膝完全伸直。', positive: '坐骨结节区痛', stats: { sens: '84%', spec: '87%', plr: '6.5' }, for: '近端腘绳肌' },
+  { num: '10', name: 'Active Piriformis', cn: '梨状肌主动试验', method: '侧卧患侧在上，足抵床面。抗阻外展 + 外旋髋。', positive: '深臀部痛', stats: { sens: '78%', spec: '80%', plr: '3.9' }, for: '深臀综合征 / 梨状肌' },
+  { num: '11', name: 'Seated Piriformis Stretch', cn: '坐位梨状肌拉伸', method: '患者坐位，医师将患髋被动屈曲 + 内收 + 内旋。', positive: '深臀部痛', stats: { sens: '52%', spec: '90%', plr: '5.2' }, for: '深臀综合征' },
+  { num: '12', name: 'Squeeze / Adductor', cn: 'Squeeze 试验', method: '仰卧屈髋 45°屈膝 90°，双膝间夹拳/气球，抗阻内收。', positive: '内收肌起点痛', stats: { sens: '79%', spec: '43%', plr: '1.4' }, for: '内收肌腹股沟痛' },
+  { num: '13', name: 'Hopping Test', cn: '单足跳试验', method: '单足跳跃 5-10 次。', positive: '腹股沟/髋深部痛', stats: { sens: '70%', spec: '60%', plr: '1.75' }, for: '骨应力反应 · 股骨颈应力骨折筛查（⚠️ 阳性需立即 MRI）' },
+  { num: '14', name: 'Long-stride Walking', cn: '大步行走试验', method: '以大于正常步长行走 20m。', positive: '后侧深痛 + 大步时重现', stats: { sens: '-', spec: '高', plr: '-' }, for: '坐骨股骨撞击' },
+  { num: '15', name: 'Scour / Grind', cn: 'Scour 试验', method: '仰卧屈膝屈髋, 施加轴向压力 + 扫描式旋转。', positive: '关节内痛 + 粗糙感 / 卡住', stats: { sens: '50-70%', spec: '29%', plr: '-' }, for: '软骨病变 + 关节内' },
+  { num: '16', name: 'Tinel (LFCN)', cn: '股外侧皮神经敲击', method: '在 ASIS 内下 1-2cm 敲击。', positive: '大腿前外侧蚁走感', stats: { sens: '-', spec: '高', plr: '-' }, for: '感觉异常性股痛' }
+];
+
+// ============================================
+// DIFFERENTIAL MATRIX
+// ============================================
+// ============================================
+// DIFFERENTIAL MATRIX · LR-style with supports/opposes
+// ============================================
+
+// Each picks → array of {dx, weight, reason}
+// positive weight = supports, negative weight = opposes
+// Weight reflects approximate log-LR: +3 strong, +2 moderate, +1 weak / -1 weak against, -2 moderate, -3 strong
+const FEATURE_WEIGHTS = {
+  // Location
+  'location:groin': [
+    { dx: 'fai',        w: +3, r: '腹股沟 C-sign 高度符合 FAI 典型分布' },
+    { dx: 'labrum',     w: +3, r: '前方关节内来源典型位置' },
+    { dx: 'iliopsoas',  w: +2, r: '髂腰肌腱走行区域' },
+    { dx: 'rectus',     w: +2, r: '股直肌起点区域' },
+    { dx: 'sports-hernia', w: +2, r: 'Doha 框架髋-腹股沟复合痛' },
+    { dx: 'adductor',   w: +2, r: '内收肌起点邻近区域' },
+    { dx: 'femoral-neck-stress', w: +2, r: '股骨颈应力骨折典型表现位置' },
+    { dx: 'cartilage',  w: +1, r: '继发于关节内病理' },
+    { dx: 'ligtres',    w: +1, r: '关节内深部痛可能' },
+    { dx: 'gtps',       w: -2, r: '单纯腹股沟痛对 GTPS 不典型' },
+    { dx: 'deep-gluteal', w: -2, r: '腹股沟痛对深臀综合征不典型' },
+    { dx: 'proximal-ham', w: -2, r: '近端腘绳肌痛应在坐骨区' }
+  ],
+  'location:c-sign': [
+    { dx: 'fai',        w: +4, r: 'C-sign 是 FAI 的标志性体征' },
+    { dx: 'labrum',     w: +3, r: '关节内病变典型 C-sign' },
+    { dx: 'cartilage',  w: +2, r: '关节内来源与 C-sign 符合' },
+    { dx: 'ligtres',    w: +2, r: '关节内病变可能' },
+    { dx: 'iliopsoas',  w: -1, r: '髂腰肌更多为点状前痛' },
+    { dx: 'sports-hernia', w: -1, r: '腹股沟痛更多为前壁/内收肌分布' },
+    { dx: 'gtps',       w: -3, r: 'C-sign 对 GTPS 不适用' },
+    { dx: 'deep-gluteal', w: -3, r: 'C-sign 不对应深臀' }
+  ],
+  'location:lateral': [
+    { dx: 'gtps',       w: +4, r: '大转子区痛是 GTPS 标志表现' },
+    { dx: 'itbs-lateral', w: +3, r: '外侧弹响髋典型位置' },
+    { dx: 'meralgia',   w: +2, r: 'LFCN 分布区重叠' },
+    { dx: 'fai',        w: -2, r: '单纯外侧痛对 FAI 不典型' },
+    { dx: 'adductor',   w: -3, r: '外侧痛与内收肌病不符' },
+    { dx: 'deep-gluteal', w: -2, r: '位置不符' }
+  ],
+  'location:deep-gluteal': [
+    { dx: 'deep-gluteal', w: +4, r: '深臀痛直接提示深臀间室病变' },
+    { dx: 'proximal-ham', w: +3, r: '坐骨结节附近的近端腘绳肌病' },
+    { dx: 'ischiofemoral', w: +3, r: '坐骨股骨撞击典型位置' },
+    { dx: 'fai',        w: -2, r: '深臀痛对 FAI 不典型' },
+    { dx: 'gtps',       w: -2, r: '位置不符' },
+    { dx: 'adductor',   w: -3, r: '位置不符' }
+  ],
+  'location:medial': [
+    { dx: 'adductor',   w: +4, r: '内侧 / 内收肌起点是内收肌病典型位置' },
+    { dx: 'osteitis-pubis', w: +3, r: '耻骨联合中线痛' },
+    { dx: 'sports-hernia', w: +2, r: 'Doha 框架内可有内侧分布' },
+    { dx: 'gtps',       w: -3, r: '位置不符' },
+    { dx: 'deep-gluteal', w: -3, r: '位置不符' }
+  ],
+
+  // Mechanical
+  'mechanical:clicking': [
+    { dx: 'labrum',     w: +3, r: '机械性卡锁高度提示瓣状盂唇撕裂' },
+    { dx: 'fai',        w: +2, r: 'FAI 常合并盂唇撕裂，出现机械症状' },
+    { dx: 'cartilage',  w: +2, r: '全层软骨瓣或游离体可致绞锁' },
+    { dx: 'ligtres',    w: +2, r: '圆韧带瓣可嵌顿' },
+    { dx: 'gtps',       w: -2, r: 'GTPS 不产生关节内机械症状' },
+    { dx: 'adductor',   w: -2, r: '内收肌病不产生机械症状' }
+  ],
+  'mechanical:snapping': [
+    { dx: 'iliopsoas',  w: +3, r: '前方弹响 → 内侧弹响髋典型' },
+    { dx: 'itbs-lateral', w: +3, r: '外侧可见弹响 → 外侧弹响髋典型' },
+    { dx: 'fai',        w: -1, r: '单纯弹响无绞锁对 FAI 不特异' },
+    { dx: 'labrum',     w: -1, r: '无绞锁提示非瓣状撕裂' }
+  ],
+  'mechanical:giving-way': [
+    { dx: 'ligtres',    w: +3, r: '不稳感强烈提示圆韧带损伤' },
+    { dx: 'labrum',     w: +2, r: '盂唇撕裂可伴不稳' },
+    { dx: 'fai',        w: +1, r: 'FAI 合并病变可致打软' }
+  ],
+  'mechanical:none': [
+    // Neutral: no added weight either way
+  ],
+
+  // Provocation
+  'provocation:deep-flexion': [
+    { dx: 'fai',        w: +3, r: '深屈曲直接触发撞击' },
+    { dx: 'labrum',     w: +3, r: '深屈曲诱发盂唇症状典型' },
+    { dx: 'iliopsoas',  w: +1, r: '深屈可激发髂腰肌' },
+    { dx: 'gtps',       w: -2, r: '深屈不是 GTPS 典型诱因' }
+  ],
+  'provocation:side-lying': [
+    { dx: 'gtps',       w: +4, r: '侧卧压迫大转子是 GTPS 典型诱因' },
+    { dx: 'itbs-lateral', w: +2, r: '外侧 ITB 区压迫诱发' },
+    { dx: 'fai',        w: -2, r: '侧卧不是 FAI 典型诱因' }
+  ],
+  'provocation:sitting': [
+    { dx: 'deep-gluteal', w: +3, r: '坐位压迫坐骨神经 / 梨状肌' },
+    { dx: 'proximal-ham', w: +3, r: '坐位直接压迫坐骨结节' },
+    { dx: 'gtps',       w: +1, r: '坐位屈髋位可激惹' },
+    { dx: 'fai',        w: +1, r: '长坐位屈髋撞击' }
+  ],
+  'provocation:cutting': [
+    { dx: 'adductor',   w: +3, r: '变向时内收肌离心负荷' },
+    { dx: 'sports-hernia', w: +3, r: '变向加速是典型诱因' },
+    { dx: 'osteitis-pubis', w: +3, r: '剪切应力于耻骨联合' },
+    { dx: 'rectus',     w: +2, r: '爆发动作牵拉股直肌' },
+    { dx: 'gtps',       w: -1, r: '切入不是 GTPS 典型诱因' }
+  ],
+  'provocation:insidious': [
+    { dx: 'gtps',       w: +2, r: '渐进隐匿起病典型' },
+    { dx: 'fai',        w: +2, r: '隐匿起病与发育性背景一致' },
+    { dx: 'deep-gluteal', w: +2, r: '慢性久坐职业常见' },
+    { dx: 'cartilage',  w: +2, r: '软骨病变多为隐匿进行性' },
+    { dx: 'rectus',     w: -2, r: '股直肌损伤多为急性' },
+    { dx: 'proximal-ham', w: -2, r: '急性撕脱不符合隐匿' },
+    { dx: 'avulsion',   w: -3, r: '撕脱骨折为急性事件' }
+  ],
+  'provocation:acute-trauma': [
+    { dx: 'rectus',     w: +3, r: '急性肌腱撕裂典型机制' },
+    { dx: 'proximal-ham', w: +3, r: '急性撕脱的典型表现' },
+    { dx: 'avulsion',   w: +3, r: '撕脱骨折需要急性事件' },
+    { dx: 'ligtres',    w: +2, r: '扭转外伤是圆韧带损伤机制' },
+    { dx: 'femoral-neck-stress', w: -1, r: '应力骨折多为慢性累积' },
+    { dx: 'gtps',       w: -2, r: 'GTPS 多为慢性渐进' }
+  ],
+
+  // Demographics
+  'demo:young-athlete': [
+    { dx: 'fai',        w: +2, r: '年轻运动员人群高发' },
+    { dx: 'labrum',     w: +2, r: '年轻活跃人群常见' },
+    { dx: 'rectus',     w: +2, r: '爆发运动年轻化' },
+    { dx: 'sports-hernia', w: +2, r: '足球运动员年轻群体' },
+    { dx: 'adductor',   w: +2, r: '足球 / 冰球年轻群体' },
+    { dx: 'proximal-ham', w: +1, r: '耐力运动员' },
+    { dx: 'avulsion',   w: +3, r: '青少年骨骺未闭' },
+    { dx: 'cartilage',  w: -2, r: '软骨病变多在中年后' },
+    { dx: 'gtps',       w: -2, r: 'GTPS 多在中年后' }
+  ],
+  'demo:middle-aged': [
+    { dx: 'fai',        w: +1, r: '中年活跃人群' },
+    { dx: 'gtps',       w: +2, r: 'GTPS 高发年龄段开始' },
+    { dx: 'iliopsoas',  w: +1, r: '中年常见' },
+    { dx: 'cartilage',  w: +2, r: '软骨退变起点' },
+    { dx: 'avulsion',   w: -3, r: '骨骺已闭合不符' }
+  ],
+  'demo:older': [
+    { dx: 'gtps',       w: +3, r: '中老年女性高发' },
+    { dx: 'cartilage',  w: +3, r: '退变累积' },
+    { dx: 'fai',        w: -1, r: '原发 FAI 手术年龄上限' },
+    { dx: 'labrum',     w: -1, r: '单纯盂唇修补年龄上限' },
+    { dx: 'avulsion',   w: -3, r: '不符年龄' },
+    { dx: 'proximal-ham', w: +1, r: '肌腱病年龄相关' }
+  ],
+  'demo:female-runner': [
+    { dx: 'gtps',       w: +3, r: '女性跑者高发' },
+    { dx: 'femoral-neck-stress', w: +4, r: '女性跑者 + 能量不足是典型高危' },
+    { dx: 'itbs-lateral', w: +2, r: '跑者外侧摩擦综合征' },
+    { dx: 'ischiofemoral', w: +2, r: '女性骨盆解剖 + 长步长' },
+    { dx: 'proximal-ham', w: +1, r: '耐力跑者' }
+  ]
+};
+
+// Red flag trigger detection from picks
+// Returns array of triggered red flags
+function detectRedFlags(picks) {
+  const flags = [];
+
+  // Combination: hopping-like provocation + female runner → femoral neck stress
+  if (picks.demo === 'female-runner' && picks.provocation !== 'acute-trauma') {
+    flags.push({
+      level: 'HIGH',
+      title: '⚑ 股骨颈应力骨折警示',
+      detail: '女性跑者 + 非急性外伤 + 腹股沟痛 —— 在排除应力骨折之前不可单纯按软组织病处理。',
+      action: 'Hopping test 必做；阳性立即 MRI（STIR/T2 + T1）；女性运动员三联征 / RED-S 代谢评估。'
+    });
+  }
+
+  // Acute trauma + giving-way → possible dislocation/subluxation
+  if (picks.provocation === 'acute-trauma' && picks.mechanical === 'giving-way') {
+    flags.push({
+      level: 'HIGH',
+      title: '⚑ 急性不稳警示',
+      detail: '急性外伤 + 不稳 —— 警惕髋关节半脱位 / 脱位史 / 圆韧带完全断裂。',
+      action: '影像评估头位置与盂唇 + 圆韧带。高 Beighton 者评估全身松弛。'
+    });
+  }
+
+  // Deep gluteal + insidious + sitting → but also consider tumor/systemic red flags
+  if (picks.location === 'deep-gluteal' && picks.provocation === 'insidious') {
+    flags.push({
+      level: 'MEDIUM',
+      title: '⚑ 深臀区隐匿起病——排除盆腔 / 骶椎病变',
+      detail: '深臀持续隐匿痛可能掩盖盆腔 / 骶骨 / 肿瘤 / 脊柱来源。',
+      action: '结合全身筛查：夜间痛、体重减轻、感觉运动异常、膀胱肠道症状。必要时 MRI 骶椎 + 盆腔。'
+    });
+  }
+
+  // Older + groin + insidious → 排除肿瘤 / AVN
+  if (picks.demo === 'older' && picks.location === 'groin' && picks.provocation === 'insidious') {
+    flags.push({
+      level: 'MEDIUM',
+      title: '⚑ 老年隐匿性腹股沟痛',
+      detail: '警惕股骨头缺血坏死、骨不全骨折、骨肿瘤（原发或转移）。',
+      action: '早期 MRI；激素史 / 酗酒史 / 恶性肿瘤史详细问诊；骨密度 + 炎症指标。'
+    });
+  }
+
+  // C-sign + young athlete = strongly FAI but also consider pediatric SCFE in <18y
+  if (picks.location === 'c-sign' && picks.demo === 'young-athlete') {
+    flags.push({
+      level: 'LOW',
+      title: '⚑ 青少年 C-sign——SCFE 排除',
+      detail: '若患者 10-16 岁，股骨头骨骺滑脱（SCFE）可表现为腹股沟痛 / 膝痛 / 跛行。',
+      action: '青少年 C-sign 需完整骨盆平片 + 侧位；体检髋关节屈曲时自发外旋提示 SCFE。'
+    });
+  }
+
+  return flags;
+}
+
+function differentialScore(picks) {
+  // Accumulate for each disease: supports[] and opposes[]
+  const dx = {};
+  DISEASES.forEach(d => { dx[d.id] = { supports: [], opposes: [] }; });
+
+  // Apply feature weights
+  Object.keys(picks).forEach(key => {
+    const val = picks[key];
+    const featureKey = `${key}:${val}`;
+    const rules = FEATURE_WEIGHTS[featureKey];
+    if (!rules) return;
+    rules.forEach(rule => {
+      if (!dx[rule.dx]) return;
+      if (rule.w > 0) {
+        dx[rule.dx].supports.push({ weight: rule.w, reason: rule.r });
+      } else if (rule.w < 0) {
+        dx[rule.dx].opposes.push({ weight: Math.abs(rule.w), reason: rule.r });
+      }
+    });
+  });
+
+  // Compute net score: sum(supports) - sum(opposes), capped floor at 0 for display purposes
+  // But keep the raw for ranking
+  const scored = Object.entries(dx).map(([id, d]) => {
+    const supportSum = d.supports.reduce((s, x) => s + x.weight, 0);
+    const opposeSum  = d.opposes.reduce((s, x) => s + x.weight, 0);
+    const net = supportSum - opposeSum;
+    return { id, supports: d.supports, opposes: d.opposes, supportSum, opposeSum, net };
+  });
+
+  // Filter: keep only those with at least one support (net can be negative but only interesting if there's any positive signal)
+  return scored
+    .filter(x => x.supports.length > 0)
+    .sort((a, b) => b.net - a.net)
+    .slice(0, 8);
+}
+
+// ============================================
+// RENDER: SPECTRUM TREE
+// ============================================
+function renderSpectrum(filter = 'all') {
+  const groups = {};
+  DISEASES.forEach(d => {
+    if (!groups[d.group]) groups[d.group] = { name: d.groupCN, en: d.groupEN, items: [] };
+    groups[d.group].items.push(d);
+  });
+
+  const tree = document.getElementById('spectrum-tree');
+  tree.innerHTML = '';
+
+  Object.entries(groups).forEach(([gid, group]) => {
+    const groupEl = document.createElement('div');
+    groupEl.className = 'spectrum-group';
+    groupEl.dataset.group = gid;
+    if (filter !== 'all' && filter !== gid) groupEl.classList.add('filter-hidden');
+
+    groupEl.innerHTML = `
+      <div class="spectrum-group-header">
+        <div class="spectrum-group-title">${group.name} <em>${group.en}</em></div>
+        <div class="spectrum-group-tag">${group.items.length} conditions</div>
+      </div>
+      <div class="disease-grid">
+        ${group.items.map(d => `
+          <div class="disease-card" data-id="${d.id}">
+            <div class="disease-card-num">${d.num}</div>
+            <div class="disease-card-title">${d.cn}</div>
+            <div class="disease-card-en">${d.en}</div>
+            <div class="disease-card-hint">${d.hint}</div>
+            <div class="disease-card-tags">
+              ${d.tags.map(t => `<span class="tag ${t[0]}">${t[1]}</span>`).join('')}
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    `;
+
+    tree.appendChild(groupEl);
+  });
+
+  // Bind click
+  document.querySelectorAll('.disease-card').forEach(card => {
+    card.addEventListener('click', () => openModal(card.dataset.id));
+  });
+}
+
+// ============================================
+// RENDER: MODAL
+// ============================================
+function openModal(id) {
+  const d = DISEASES.find(x => x.id === id);
+  if (!d) return;
+
+  // Enhanced data lookup (optional — not every disease has all fields)
+  const ex = (typeof ENHANCED !== 'undefined' && ENHANCED[id]) ? ENHANCED[id] : {};
+
+  document.getElementById('modal-eyebrow').textContent = `${d.groupCN} · ${d.groupEN} · №${d.num}`;
+  document.getElementById('modal-title').textContent = d.cn;
+  document.getElementById('modal-title-en').textContent = d.en;
+
+  const body = document.getElementById('modal-body');
+
+  // — § 00 · Red Flag block (only if redFlags exist) —
+  const redFlagBlock = (ex.redFlags && ex.redFlags.length) ? `
+    <div class="clinical-section redflag-section">
+      <div class="clinical-section-header redflag-header">
+        <span class="clinical-section-num">§ 00</span>
+        <span class="clinical-section-title">红旗警示 <em>Red Flags · Do Not Miss</em></span>
+      </div>
+      <div class="redflag-list">
+        ${ex.redFlags.map(rf => `
+          <div class="redflag-row">
+            <div class="redflag-icon">⚑</div>
+            <div class="redflag-body">
+              <div class="redflag-flag">${rf.flag}</div>
+              <div class="redflag-action"><span class="redflag-arrow">↳</span> ${rf.action}</div>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  ` : '';
+
+  // — § 02 signs: linkify test names —
+  const signsWithLinks = d.signs.map(s => linkifyTestNames(s));
+
+  body.innerHTML = `
+    ${redFlagBlock}
+
+    <div class="clinical-section">
+      <div class="clinical-section-header">
+        <span class="clinical-section-num">§ 01</span>
+        <span class="clinical-section-title">症状学 <em>Symptomatology</em></span>
+      </div>
+      <div class="clinical-content">${d.symptoms}</div>
+    </div>
+
+    <div class="clinical-section">
+      <div class="clinical-section-header">
+        <span class="clinical-section-num">§ 02</span>
+        <span class="clinical-section-title">体格检查 <em>Physical Findings</em></span>
+      </div>
+      <div class="clinical-content">
+        <ul>${signsWithLinks.map(s => `<li>${s}</li>`).join('')}</ul>
+      </div>
+    </div>
+
+    <div class="clinical-section">
+      <div class="clinical-section-header">
+        <span class="clinical-section-num">§ 03</span>
+        <span class="clinical-section-title">病史要点 <em>Relevant History</em></span>
+      </div>
+      <div class="clinical-content">${d.history}</div>
+    </div>
+
+    <div class="clinical-section">
+      <div class="clinical-section-header">
+        <span class="clinical-section-num">§ 04</span>
+        <span class="clinical-section-title">影像学路径 <em>Imaging</em></span>
+      </div>
+      <div class="clinical-content">
+        <ul>${d.imaging.map(i => `<li>${i}</li>`).join('')}</ul>
+      </div>
+    </div>
+
+    <div class="clinical-section">
+      <div class="clinical-section-header">
+        <span class="clinical-section-num">§ 05</span>
+        <span class="clinical-section-title">诊断决策 <em>Rule in · Rule out</em></span>
+      </div>
+      <div class="decision-pair">
+        <div class="decision-block rule-in">
+          <div class="decision-label">Rule in · 确诊条件</div>
+          <ul>${d.ruleIn.map(r => `<li>${r}</li>`).join('')}</ul>
+        </div>
+        <div class="decision-block rule-out">
+          <div class="decision-label">Rule out · 排除条件</div>
+          <ul>${d.ruleOut.map(r => `<li>${r}</li>`).join('')}</ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="clinical-section">
+      <div class="clinical-section-header">
+        <span class="clinical-section-num">§ 06</span>
+        <span class="clinical-section-title">病因与病理 <em>Etiology · Pathogenesis</em></span>
+      </div>
+      <div class="pathology-flow">
+        <div class="flow-chain">
+          ${d.pathology.map((p, i) => `
+            <div class="flow-node">${p}</div>
+            ${i < d.pathology.length - 1 ? '<span class="flow-arrow">→</span>' : ''}
+          `).join('')}
+        </div>
+      </div>
+    </div>
+
+    <div class="clinical-section">
+      <div class="clinical-section-header">
+        <span class="clinical-section-num">§ 07</span>
+        <span class="clinical-section-title">自然病史 <em>Natural History</em></span>
+      </div>
+      <div class="history-chart">
+        <div class="history-title">${d.naturalHistory.title}</div>
+        <div class="history-timeline">
+          ${d.naturalHistory.points.map(p => `
+            <div class="history-point" style="left: ${p.pos}%;">
+              <span class="pt-label">${p.label}</span>
+              <span class="pt-time">${p.time}</span>
+            </div>
+          `).join('')}
+        </div>
+        <div class="history-note">${d.naturalHistory.note}</div>
+      </div>
+    </div>
+
+    <div class="clinical-section">
+      <div class="clinical-section-header">
+        <span class="clinical-section-num">§ 08</span>
+        <span class="clinical-section-title">循证治疗阶梯 <em>Evidence-based Treatment Ladder</em></span>
+      </div>
+      <div class="treatment-ladder">
+        ${d.treatment.map((t, i) => {
+          const edetail = (ex.evidenceDetails && ex.evidenceDetails[t.stage]) ? ex.evidenceDetails[t.stage] : null;
+          return `
+          <div class="ladder-rung">
+            <div class="ladder-num">${toRoman(i+1)}</div>
+            <div>
+              <div class="ladder-stage">${t.stage}</div>
+              <div class="ladder-title">${t.title} <span class="evidence-tier ${t.evidence.toLowerCase()} ${edetail ? 'has-detail' : ''}" ${edetail ? `data-stage="${encodeURIComponent(t.stage)}" data-disease="${id}"` : ''}>Evidence ${t.evidence}${edetail ? ' ▾' : ''}</span></div>
+              <div class="ladder-trigger">触发条件: ${t.trigger}</div>
+            </div>
+            <div class="ladder-detail">
+              <ul>${t.detail.map(dt => `<li>${dt}</li>`).join('')}</ul>
+              ${edetail ? renderEvidenceDetail(edetail) : ''}
+            </div>
+          </div>
+        `;
+        }).join('')}
+      </div>
+    </div>
+
+    ${ex.typicalCase ? `
+      <div class="clinical-section">
+        <div class="clinical-section-header">
+          <span class="clinical-section-num">§ 09</span>
+          <span class="clinical-section-title">典型病例分析 <em>Illustrative Case</em></span>
+        </div>
+        <div class="case-container">
+          <div class="case-title">${ex.typicalCase.title}</div>
+          <div class="case-grid">
+            <div class="case-block"><div class="case-label">主诉 / 病史</div><div class="case-body">${ex.typicalCase.vignette}</div></div>
+            <div class="case-block"><div class="case-label">查体</div><div class="case-body">${ex.typicalCase.examination}</div></div>
+            <div class="case-block"><div class="case-label">影像</div><div class="case-body">${ex.typicalCase.imaging}</div></div>
+            <div class="case-block"><div class="case-label">临床决策</div><div class="case-body">${ex.typicalCase.decision}</div></div>
+            <div class="case-block"><div class="case-label">结局</div><div class="case-body">${ex.typicalCase.outcome}</div></div>
+          </div>
+          <div class="case-reflection">
+            <div class="case-reflection-title">反思要点</div>
+            <ul>${ex.typicalCase.reflection.map(r => `<li>${r}</li>`).join('')}</ul>
+          </div>
+        </div>
+      </div>
+    ` : ''}
+
+    ${ex.controversies && ex.controversies.length ? `
+      <div class="clinical-section">
+        <div class="clinical-section-header">
+          <span class="clinical-section-num">§ 10</span>
+          <span class="clinical-section-title">争议与研究热点 <em>Controversies & Frontiers</em></span>
+        </div>
+        <div class="controversy-list">
+          ${ex.controversies.map((c, i) => `
+            <div class="controversy-item">
+              <div class="controversy-num">${String(i+1).padStart(2, '0')}</div>
+              <div class="controversy-body">
+                <div class="controversy-topic">${c.topic}</div>
+                <div class="controversy-row"><span class="controversy-tag current">现状</span><span class="controversy-text">${c.current}</span></div>
+                <div class="controversy-row"><span class="controversy-tag frontier">前沿</span><span class="controversy-text">${c.frontier}</span></div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    ` : ''}
+  `;
+
+  // Bind evidence detail toggles
+  body.querySelectorAll('.evidence-tier.has-detail').forEach(el => {
+    el.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const rung = el.closest('.ladder-rung');
+      const detailBlock = rung.querySelector('.evidence-detail-block');
+      if (detailBlock) {
+        detailBlock.classList.toggle('open');
+        el.classList.toggle('active');
+      }
+    });
+  });
+
+  // Bind test-name links inside signs
+  body.querySelectorAll('.test-link').forEach(el => {
+    el.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const testName = el.dataset.test;
+      showTestPopover(testName, el);
+    });
+  });
+
+  document.getElementById('modal-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+// Render evidence detail block (trials + keyPoint)
+function renderEvidenceDetail(edetail) {
+  return `
+    <div class="evidence-detail-block">
+      <div class="evidence-detail-label">证据展开 · Trial-level evidence</div>
+      ${edetail.trials.map(tr => `
+        <div class="trial-card">
+          <div class="trial-name">${tr.name}</div>
+          <div class="trial-grid">
+            <div class="trial-cell"><span class="trial-k">n</span><span class="trial-v">${tr.n}</span></div>
+            <div class="trial-cell"><span class="trial-k">随访</span><span class="trial-v">${tr.followUp}</span></div>
+            <div class="trial-cell"><span class="trial-k">Fragility</span><span class="trial-v">${tr.fragility}</span></div>
+          </div>
+          <div class="trial-effect"><span class="trial-k">效应量</span> ${tr.effect}</div>
+          <div class="trial-exclusion"><span class="trial-k">排除标准</span> ${tr.exclusion}</div>
+          <div class="trial-note">▸ ${tr.note}</div>
+        </div>
+      `).join('')}
+      ${edetail.keyPoint ? `<div class="evidence-keypoint"><span class="keypoint-label">Key point</span> ${edetail.keyPoint}</div>` : ''}
+    </div>
+  `;
+}
+
+// Linkify common test names inside sign strings
+function linkifyTestNames(s) {
+  if (typeof TESTS === 'undefined') return s;
+  // Match known test names (case-sensitive, longest-first to avoid partial overlap)
+  const names = TESTS.map(t => t.name).sort((a, b) => b.length - a.length);
+  let result = s;
+  names.forEach(name => {
+    // Escape regex special chars
+    const escaped = name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const re = new RegExp(`\\b(${escaped})\\b`, 'g');
+    result = result.replace(re, `<a class="test-link" data-test="${name}" href="#">${name}</a>`);
+  });
+  return result;
+}
+
+// Show test popover (info card on demand)
+function showTestPopover(testName, anchorEl) {
+  const test = TESTS.find(t => t.name === testName);
+  if (!test) return;
+  // Remove any existing popover
+  document.querySelectorAll('.test-popover').forEach(p => p.remove());
+
+  const pop = document.createElement('div');
+  pop.className = 'test-popover';
+  pop.innerHTML = `
+    <div class="tp-close">×</div>
+    <div class="tp-title">${test.name} <em>${test.cn}</em></div>
+    <div class="tp-method"><b>操作:</b> ${test.method}</div>
+    <div class="tp-positive"><b>阳性:</b> ${test.positive}</div>
+    <div class="tp-stats">
+      <span><b>Sens</b> ${test.stats.sens}</span>
+      <span><b>Spec</b> ${test.stats.spec}</span>
+      <span><b>+LR</b> ${test.stats.plr}</span>
+    </div>
+    <div class="tp-for">↳ ${test.for}</div>
+  `;
+  document.body.appendChild(pop);
+
+  // Position near anchor
+  const rect = anchorEl.getBoundingClientRect();
+  const popW = 380;
+  let left = rect.left + rect.width / 2 - popW / 2;
+  left = Math.max(12, Math.min(window.innerWidth - popW - 12, left));
+  let top = rect.bottom + 8;
+  pop.style.left = left + 'px';
+  pop.style.top = top + 'px';
+
+  pop.querySelector('.tp-close').addEventListener('click', () => pop.remove());
+  // Click outside to close
+  setTimeout(() => {
+    const handler = (e) => {
+      if (!pop.contains(e.target)) {
+        pop.remove();
+        document.removeEventListener('click', handler);
+      }
+    };
+    document.addEventListener('click', handler);
+  }, 0);
+}
+
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function toRoman(n) {
+  const map = ['', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII'];
+  return map[n] || n;
+}
+
+// ============================================
+// RENDER: TEST CATALOG
+// ============================================
+function renderTests() {
+  const cat = document.getElementById('test-catalog');
+  cat.innerHTML = TESTS.map(t => `
+    <div class="test-card">
+      <div class="test-num">TEST ${t.num}</div>
+      <div class="test-title">${t.name}</div>
+      <div class="test-cn">${t.cn}</div>
+      <div class="test-method">${t.method}</div>
+      <div class="test-positive"><strong>阳性指征:</strong> ${t.positive}</div>
+      <div class="test-stats-grid">
+        <div class="test-stat-box">
+          <div class="test-stat-label">SENS</div>
+          <div class="test-stat-val">${t.stats.sens}</div>
+        </div>
+        <div class="test-stat-box">
+          <div class="test-stat-label">SPEC</div>
+          <div class="test-stat-val">${t.stats.spec}</div>
+        </div>
+        <div class="test-stat-box">
+          <div class="test-stat-label">+LR</div>
+          <div class="test-stat-val">${t.stats.plr}</div>
+        </div>
+      </div>
+      <div class="test-for">↳ ${t.for}</div>
+    </div>
+  `).join('');
+}
+
+// ============================================
+// DIFFERENTIAL PICKER
+// ============================================
+const picks = {};
+
+function bindPicker() {
+  document.querySelectorAll('.step-options').forEach(stepEl => {
+    const key = stepEl.dataset.key;
+    stepEl.querySelectorAll('.step-option').forEach(opt => {
+      opt.addEventListener('click', () => {
+        stepEl.querySelectorAll('.step-option').forEach(o => o.classList.remove('selected'));
+        opt.classList.add('selected');
+        picks[key] = opt.dataset.val;
+        updateDifferential();
+      });
+    });
+  });
+}
+
+function updateDifferential() {
+  if (!picks.location) return;
+
+  const results = differentialScore(picks);
+  const redFlags = detectRedFlags(picks);
+  const list = document.getElementById('results-list');
+  const block = document.getElementById('picker-results');
+
+  // Build red flag banner (if any) — this always appears BEFORE results
+  const redFlagBanner = redFlags.length ? `
+    <div class="redflag-banner">
+      <div class="redflag-banner-title">⚑ RED FLAGS DETECTED · 优先处理</div>
+      ${redFlags.map(rf => `
+        <div class="redflag-banner-row level-${rf.level.toLowerCase()}">
+          <div class="rf-bar"></div>
+          <div class="rf-content">
+            <div class="rf-title">${rf.title}</div>
+            <div class="rf-detail">${rf.detail}</div>
+            <div class="rf-action"><span class="rf-arrow">↳</span> ${rf.action}</div>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+  ` : '';
+
+  if (results.length === 0 && redFlags.length === 0) {
+    block.style.display = 'none';
+    return;
+  }
+
+  // Compute displayed score: net weight relative to top for visual comparison
+  const topNet = results.length ? results[0].net : 1;
+
+  const resultsHtml = results.map((r, i) => {
+    const d = DISEASES.find(x => x.id === r.id);
+    // Normalize to 0-100 for bar display, but label it as 相对证据强度 to avoid false "Match %"
+    const barPct = topNet > 0 ? Math.max(0, Math.min(100, Math.round((r.net / topNet) * 100))) : 0;
+    // LR-style qualitative label based on net
+    let tier = '边缘可能';
+    if (r.net >= 8) tier = '高度符合';
+    else if (r.net >= 5) tier = '强烈提示';
+    else if (r.net >= 3) tier = '中度支持';
+    else if (r.net >= 1) tier = '弱支持';
+    else tier = '对立证据为主';
+
+    return `
+      <div class="result-item enhanced" data-id="${r.id}">
+        <div class="result-head">
+          <div class="result-rank">${toRoman(i+1)}</div>
+          <div class="result-titles">
+            <div class="result-name">${d.cn}</div>
+            <div class="result-why">${d.en}</div>
+          </div>
+          <div class="result-tier ${tierClass(r.net)}">${tier}</div>
+        </div>
+        <div class="result-bar-wrap">
+          <div class="result-bar" style="width: ${barPct}%;"></div>
+          <div class="result-bar-meta">
+            <span class="rb-sup">支持 +${r.supportSum}</span>
+            <span class="rb-opp">反对 −${r.opposeSum}</span>
+            <span class="rb-net">净 ${r.net >= 0 ? '+' : ''}${r.net}</span>
+          </div>
+        </div>
+        <div class="result-evidence-grid">
+          <div class="result-evidence supports">
+            <div class="result-evidence-label">支持证据</div>
+            <ul>${r.supports.length ? r.supports.map(s => `<li><span class="w-chip pos">+${s.weight}</span>${s.reason}</li>`).join('') : '<li class="ev-empty">—</li>'}</ul>
+          </div>
+          <div class="result-evidence opposes">
+            <div class="result-evidence-label">反对证据</div>
+            <ul>${r.opposes.length ? r.opposes.map(s => `<li><span class="w-chip neg">−${s.weight}</span>${s.reason}</li>`).join('') : '<li class="ev-empty">—</li>'}</ul>
+          </div>
+        </div>
+        <div class="result-cta">点击展开完整临床卡片 →</div>
+      </div>
+    `;
+  }).join('');
+
+  list.innerHTML = redFlagBanner + resultsHtml;
+
+  list.querySelectorAll('.result-item').forEach(item => {
+    item.addEventListener('click', () => openModal(item.dataset.id));
+  });
+
+  block.style.display = 'block';
+}
+
+function tierClass(net) {
+  if (net >= 8) return 't-high';
+  if (net >= 5) return 't-strong';
+  if (net >= 3) return 't-mid';
+  if (net >= 1) return 't-low';
+  return 't-neg';
+}
+
+// ============================================
+// NAV + FILTER
+// ============================================
+function bindNav() {
+  document.querySelectorAll('.nav-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById('view-' + tab.dataset.view).classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  });
+
+  document.querySelectorAll('.filter-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      renderSpectrum(chip.dataset.filter);
+    });
+  });
+
+  document.querySelectorAll('.region-zone').forEach(zone => {
+    zone.addEventListener('click', () => {
+      const region = zone.dataset.region;
+      document.querySelectorAll('.region-zone').forEach(z => z.classList.remove('active'));
+      zone.classList.add('active');
+      document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+      const chip = document.querySelector(`.filter-chip[data-filter="${region}"]`);
+      if (chip) chip.classList.add('active');
+      renderSpectrum(region);
+    });
+  });
+
+  document.getElementById('modal-close').addEventListener('click', closeModal);
+  document.getElementById('modal-overlay').addEventListener('click', (e) => {
+    if (e.target.id === 'modal-overlay') closeModal();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeModal();
+  });
+}
+
+// ============================================
+// INIT
+// ============================================
+document.addEventListener('DOMContentLoaded', () => {
+  renderSpectrum();
+  renderTests();
+  bindPicker();
+  bindNav();
+});
+</script>
+
+</body>
+</html>
